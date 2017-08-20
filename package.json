@@ -1,0 +1,34 @@
+{
+  "name": "cookietime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tslint -c tslint.json 'src/**/*.ts' && webpack",
+    "deploy": "tslint -c tslint.json 'src/**/*.ts' && webpack && node scripts/uploader.js"
+  },
+  "author": "",
+  "license": "SEE LICENSE IN License.txt",
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.39",
+    "@types/node": "^7.0.5",
+    "aws-sdk": "^2.12.0",
+    "source-map-loader": "^0.1.6",
+    "ts-loader": "^2.0.0",
+    "tslint": "^4.4.2",
+    "typescript": "^2.1.5",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.3.0",
+    "webpack-node-externals": "^1.5.4",
+    "zip-webpack-plugin": "^0.3.0"
+  },
+  "dependencies": {
+    "aws4": "^1.6.0",
+    "babel-polyfill": "^6.22.0",
+    "babel-runtime": "^6.22.0",
+    "source-map-support": "^0.4.11",
+    "types": "^0.1.1",
+    "typings": "^2.1.0"
+  }
+}
