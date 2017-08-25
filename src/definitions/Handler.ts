@@ -13,7 +13,12 @@ namespace Handlers {
         }
 
         set(prop, value): boolean {
-            console.log(`setting frame ${prop}, ${prop in this ? "overwritten" : "new frame"}.`);
+            console.log(`setting frame ${prop}`);
+
+            if (prop in this) {
+                throw new Error(`Error, frame ${prop} already exists. All frame IDs must be unique.`);
+            }
+
             return this[prop] = value;
         }
     }
