@@ -5,13 +5,18 @@ export class FrameDirectory {
 
     }
 
-    get(prop): Frame | undefined {
-        console.log(`Fetching frame ${prop}, ${prop in this ? "found" : "not found"}.`);
+    get(prop): Frame {
+        console.log(`Fetching frame ${prop}...`);
+
+        if (!(prop in this)) {
+            throw new Error(`Error, frame ${prop} not found.`);
+        }
+
         return this[prop];
     }
 
     set(prop, value): boolean {
-        console.log(`adding frame ${prop}...`);
+        console.log(`Adding frame ${prop}...`);
 
         if (prop in this) {
             throw new Error(`Error, frame ${prop} already exists. All frame IDs must be unique.`);
@@ -53,7 +58,7 @@ Object.defineProperty(singleton, "instance", {
 // ensure the API is never changed
 // -------------------------------
 
-Object.freeze(singleton);
+// Object.freeze(singleton);
 
 // export the singleton API only
 // -----------------------------

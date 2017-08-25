@@ -1,9 +1,9 @@
-import {Callback, Context} from "aws-lambda";
+import {Callback, Context as LambdaContext} from "aws-lambda";
 import {AlexaRequestBody} from "./AlexaService";
 
 namespace Skill {
     export class Context {
-        constructor(request: AlexaRequestBody, event: Context, callback: Callback, _this?: any) {
+        constructor(request: AlexaRequestBody, event: LambdaContext, callback: Callback, _this?: any) {
             if (_this) {
                 Object.assign(this, _this);
             }
@@ -15,7 +15,7 @@ namespace Skill {
 
         request: AlexaRequestBody;
 
-        event: Context;
+        event: LambdaContext;
 
         callback: Callback;
 

@@ -6,7 +6,7 @@ let credentials = new aws.SharedIniFileCredentials({profile: "cookietime"});
 aws.config.credentials = credentials;
 
 let lambda = new aws.Lambda({apiVersion: "2015-03-31", region: "us-east-1"});
-let lambdaARN_Dev = "arn:aws:lambda:YOUR:FUNCTION";
+let lambdaARN_Dev = "arn:aws:lambda:us-east-1:594681367028:function:cookieTime";
 let zipPath = path.join(__dirname, "../build/skill_bundle.js.zip");
 
 let startTime = new Date().getTime();
@@ -38,7 +38,7 @@ function updateFunctionCode() {
 function updateFunctionConfig() {
     let params = {
         FunctionName: lambdaARN_Dev,
-        Handler: "skill_bundle.default",
+        Handler: "index.default",
         MemorySize: 512,
         Timeout: 5
     };

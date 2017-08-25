@@ -1,5 +1,7 @@
 import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Context} from "../definitions/SkillContext";
+import "./Start";
+
 
 let Frames = require("../definitions/FrameDirectory");
 
@@ -10,16 +12,17 @@ let entry = (ctx: Context) => {
     model.speech = "hello";
     model.reprompt = "hello again";
 
-    let r = new ResponseContext(model);
-
-    return r;
+    return new ResponseContext(model);
 };
 
 let actionMap = {
-    "LaunchRequest": function () {
+    "LaunchRequest": () => {
         return Frames["Start"];
     }
 };
 
-let Start = new Frame("Start", entry, actionMap);
+let unhandled = () => {
+    return Frames["Start"];
+};
 
+new Frame("Start", entry, unhandled, actionMap);

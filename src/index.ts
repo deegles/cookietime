@@ -1,10 +1,16 @@
 "use strict";
-require("source-map-support").install(); // Required for source maps to work when debugging
 import {Callback, Context} from "aws-lambda";
-import * as aws from "aws-sdk";
 import * as util from "util";
 import {AlexaRequestBody} from "./definitions/AlexaService";
+import {ResponseContext} from "./definitions/Handler";
+import {Context as SkillContext} from "./definitions/SkillContext";
 
+let Frames = require("./definitions/FrameDirectory");
+let Views = require("./definitions/ViewsDirectory");
+
+// TODO: find workaround for this
+require("./handlers/Start");
+require("./views/AlexaStandard");
 
 let handler = function (event: AlexaRequestBody, context: Context, callback: Callback): void {
 
@@ -67,10 +73,31 @@ let handler = function (event: AlexaRequestBody, context: Context, callback: Cal
 
     console.log("---- Session start ----");
 
+    if (!event.session.attributes) {
+        event.session.attributes = {};
+    }
+
     try {
-        // handle event
+        let currentFrame = event.session.attributes["_CurrentFrame"];
+        let ctx = new SkillContext(event, context, callback, event.session.attributes);
+
+        let frame = Frames[currentFrame || "Start"];
+
+        let responseCtx: ResponseContext = frame.entry(ctx);
+
+        console.log("model: " + JSON.stringify(responseCtx.model));
+
+        let view = Views["AlexaStandard"];
+
+        let response = view.render(responseCtx.model);
+
+        console.log("response: %j", response);
+
+        callback(undefined, response);
+
     } catch (err) {
-        context.fail(err);
+        console.log("Error: " + JSON.stringify(err));
+        callback(err, undefined);
     }
 };
 

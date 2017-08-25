@@ -4,10 +4,11 @@ let Frames = require("../definitions/FrameDirectory");
 namespace Handlers {
 
     export class Frame {
-        constructor(id: string, entry: ReturnsResponseContext, FrameMap: ActionMap) {
+        constructor(id: string, entry: ReturnsResponseContext, unhandled: ReturnsFrame, FrameMap: ActionMap) {
             this.id = id;
             this.entry = entry;
             this.actions = FrameMap;
+            this.unhandled = unhandled;
 
             Frames[id] = this;
         }
@@ -15,6 +16,8 @@ namespace Handlers {
         id: string;
 
         entry: ReturnsResponseContext;
+
+        unhandled: ReturnsFrame;
 
         actions: ActionMap;
     }

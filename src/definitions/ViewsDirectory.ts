@@ -5,7 +5,12 @@ export class ViewsDirectory {
     }
 
     get(prop): View | undefined {
-        console.log(`Fetching view ${prop}, ${prop in this ? "found" : "not found"}.`);
+        console.log(`Fetching view ${prop}...`);
+
+        if (!(prop in this)) {
+            throw new Error(`Error, view ${prop} not found.`);
+        }
+
         return this[prop];
     }
 
@@ -24,18 +29,18 @@ export class ViewsDirectory {
 // create a unique, global symbol name
 // -----------------------------------
 
-const FRAME_DIRECTORY_KEY = Symbol.for("CookieTime.namespace.ViewsDirectory");
+const VIEWS_DIRECTORY_KEY = Symbol.for("CookieTime.namespace.ViewsDirectory");
 
 // check if the global object has this symbol
 // add it if it does not have the symbol, yet
 // ------------------------------------------
 
 let globalSymbols = Object.getOwnPropertySymbols(global);
-let hasFrameDir = (globalSymbols.indexOf(FRAME_DIRECTORY_KEY) > -1);
+let hasViewsDir = (globalSymbols.indexOf(VIEWS_DIRECTORY_KEY) > -1);
 
-if (!hasFrameDir) {
-    console.log("Initializing Frame directory...");
-    global[FRAME_DIRECTORY_KEY] = new FrameDirectory();
+if (!hasViewsDir) {
+    console.log("Initializing views directory...");
+    global[VIEWS_DIRECTORY_KEY] = new ViewsDirectory();
 }
 
 // define the singleton API
@@ -45,14 +50,14 @@ let singleton = {};
 
 Object.defineProperty(singleton, "instance", {
     get: function () {
-        return global[FRAME_DIRECTORY_KEY];
+        return global[VIEWS_DIRECTORY_KEY];
     }
 });
 
 // ensure the API is never changed
 // -------------------------------
 
-Object.freeze(singleton);
+// Object.freeze(singleton);
 
 // export the singleton API only
 // -----------------------------

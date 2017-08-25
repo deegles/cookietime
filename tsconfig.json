@@ -1,18 +1,19 @@
 {
   "include": [
-    "./src/**/*"
+    "./src/**/*",
+    "./src/handlers/*"
   ],
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "sourceMap": true,
-    "lib": ["es2015"],
+    "lib": ["es6"],
     "types": [
       "node",
       "mocha",
       "chai"
     ],
-    "outDir": "./"
+    "outDir": "./build"
   },
   "exclude": [
     "node_modules"
