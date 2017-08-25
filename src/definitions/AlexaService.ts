@@ -1,3 +1,5 @@
+import {ResponseBody} from "./Common";
+
 /**
  * Alexa Skills Kit TypeScript definitions built from
  * [Alexa Skills Kit Interface Reference](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference).
@@ -276,7 +278,8 @@ namespace AlexaService {
                 }
             }
      */
-    export interface AlexaResponseBody {
+
+    export interface AlexaResponseBody extends ResponseBody {
         /** The version specifier for the response with the value to be defined as: “1.0” */
         version: string;
         /** A map of key-value pairs to persist in the session.
