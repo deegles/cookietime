@@ -1,12 +1,12 @@
 "use strict";
 require("source-map-support").install(); // Required for source maps to work when debugging
-import * as Alexa from "alexa-sdk";
+import {Callback, Context} from "aws-lambda";
+import * as aws from "aws-sdk";
 import * as util from "util";
-import * as stateHandlers from "./handlers/States";
+import {AlexaRequestBody} from "./definitions/AlexaService";
 
-let handler = function (event: Alexa.RequestBody, context: Alexa.Context, callback: Function): void {
-    let alexa = Alexa.handler(event, context, callback);
-    // alexa.dynamoDBTableName = "SkillUserSessions"; // Store user session data
+
+let handler = function (event: AlexaRequestBody, context: Context, callback: Callback): void {
 
     let customerId = event.context ? event.context.System.user.userId : event.session.user.userId;
     let sessionId = event.session.sessionId;
@@ -29,10 +29,6 @@ let handler = function (event: Alexa.RequestBody, context: Alexa.Context, callba
         });
     }
 
-    Object.defineProperty(alexa, "log", {
-        value: log
-    });
-
     function err() {
         console.error("%j", {
             message: util.format.apply(this, arguments),
@@ -42,10 +38,6 @@ let handler = function (event: Alexa.RequestBody, context: Alexa.Context, callba
             eventType: "error"
         });
     }
-
-    Object.defineProperty(alexa, "error", {
-        value: err
-    });
 
     let succeed = context.succeed;
 
@@ -73,19 +65,10 @@ let handler = function (event: Alexa.RequestBody, context: Alexa.Context, callba
         fail(payload);
     };
 
-    try {
-        stateHandlers.states.forEach(stateHandler => {
-            alexa.registerHandlers(stateHandler);
-        });
-    } catch (err) {
-        return context.fail("Error loading state handlers: " + err);
-    }
-
     console.log("---- Session start ----");
 
     try {
-        alexa.resources = require("./resources/strings.json");
-        alexa.execute();
+        // handle event
     } catch (err) {
         context.fail(err);
     }
