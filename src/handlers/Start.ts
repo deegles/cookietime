@@ -5,14 +5,12 @@ let Frames = require("../definitions/FrameDirectory");
 
 let entry = (ctx: Context) => {
 
-    let r = new ResponseContext();
-
     let model = new ResponseModel();
-
-    r.model = model;
 
     model.speech = "hello";
     model.reprompt = "hello again";
+
+    let r = new ResponseContext(model);
 
     return r;
 };
