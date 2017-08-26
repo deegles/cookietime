@@ -8,7 +8,6 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     let model = new ResponseModel();
 
     model.speech = "you said no";
-    model.reprompt = "no again";
 
     attr["myprop"] = "1";
 

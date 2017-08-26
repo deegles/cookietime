@@ -12,6 +12,8 @@ import {DAL} from "./resources/dal";
 
 import "./resources/imports";
 
+let dal = new DAL("deeglescoSkillUserSessions");
+
 let handler = async function (event: AlexaRequestBody, context: Context, callback: Callback): Promise<void> {
 
     let customerId = event.context ? event.context.System.user.userId : event.session.user.userId;
@@ -76,8 +78,6 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
     if (!event.session.attributes) {
         event.session.attributes = {};
     }
-
-    let dal = new DAL("deeglescoSkillUserSessions");
 
     try {
         let ctx = new SkillContext(event, context, callback);
