@@ -1,25 +1,20 @@
+import * as ViewsDirectory from "../definitions/ViewsDirectory";
 import {ResponseBody} from "./Common";
 import {ResponseModel} from "./Handler";
-let ViewsDirectory = require("../definitions/ViewsDirectory");
 
-namespace Views {
+export class View {
+    constructor(id: string, render: RendersResponse) {
+        this.id = id;
+        this.render = render;
 
-    export class View {
-        constructor(id: string, render: RendersResponse) {
-            this.id = id;
-            this.render = render;
-
-            ViewsDirectory[id] = this;
-        }
-
-        id: string;
-
-        render: RendersResponse;
+        ViewsDirectory[id] = this;
     }
 
-    export interface RendersResponse {
-        (model: ResponseModel): ResponseBody | Promise<ResponseBody>;
-    }
+    id: string;
+
+    render: RendersResponse;
 }
 
-export = Views;
+export interface RendersResponse {
+    (model: ResponseModel): ResponseBody | Promise<ResponseBody>;
+}
