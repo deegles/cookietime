@@ -1,6 +1,6 @@
 import {Frame} from "./Handler";
 
-export class FrameDirectory {
+class FrameDirectory {
     constructor() {
 
     }

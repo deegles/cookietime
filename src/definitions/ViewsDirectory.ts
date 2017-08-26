@@ -1,5 +1,5 @@
 import {View} from "./Views";
-export class ViewsDirectory {
+class ViewsDirectory {
     constructor() {
 
     }
