@@ -1,0 +1,14 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "Runtime dependencies for skill",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Diego Benitez <diego@vokkal.co>",
+  "license": "SEE LICENSE IN License.txt",
+  "dependencies": {
+    "lzutf8": "^0.4.6"
+  }
+}
