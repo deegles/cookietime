@@ -7,7 +7,7 @@ new View("AlexaStandard", (model: ResponseModel) => {
     let response: AlexaResponseBody = {
         version: "1.0",
         response: {
-            shouldEndSession: false,
+            shouldEndSession: !model.reprompt,
             outputSpeech: {
                 type: "PlainText",
                 text: model.speech
