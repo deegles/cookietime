@@ -8,9 +8,11 @@ import {Attributes, RequestContext as SkillContext} from "./definitions/SkillCon
 import * as Frames from "./definitions/FrameDirectory";
 import * as Views from "./definitions/ViewsDirectory";
 
+import {DAL} from "./resources/dal";
+
 import "./resources/imports";
 
-let handler = function (event: AlexaRequestBody, context: Context, callback: Callback): void {
+let handler = async function (event: AlexaRequestBody, context: Context, callback: Callback): Promise<void> {
 
     let customerId = event.context ? event.context.System.user.userId : event.session.user.userId;
     let sessionId = event.session.sessionId;
@@ -75,10 +77,18 @@ let handler = function (event: AlexaRequestBody, context: Context, callback: Cal
         event.session.attributes = {};
     }
 
+    let dal = new DAL("deeglescoSkillUserSessions");
+
     try {
         let ctx = new SkillContext(event, context, callback);
-        // TODO: load attributes from data store when new
-        let attributes = new Attributes(event.session.attributes);
+
+        let attributes;
+        if (event.session.new) {
+            attributes = new Attributes(await dal.get(customerId));
+        } else {
+            attributes = new Attributes(event.session.attributes);
+        }
+
         let frame = Frames[attributes["_CurrentFrame"] || "Start"];
         let intent = getIntent(event);
 
@@ -101,6 +111,10 @@ let handler = function (event: AlexaRequestBody, context: Context, callback: Cal
         response.sessionAttributes = attributes;
 
         console.log("response: %j", response);
+
+        if (response.response.shouldEndSession || intent === "SessionEndedRequest") {
+            await dal.set(customerId, attributes);
+        }
 
         callback(undefined, response);
 
