@@ -1,13 +1,12 @@
 {
   "include": [
-    "./src/**/*",
-    "./src/handlers/*"
+    "./src/**/*"
   ],
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
     "sourceMap": true,
-    "lib": ["es6"],
+    "lib": ["es6", "dom"],
     "types": [
       "node",
       "mocha",
