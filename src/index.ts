@@ -1,16 +1,14 @@
 "use strict";
 import {Callback, Context} from "aws-lambda";
 import * as util from "util";
-import {AlexaRequestBody} from "./definitions/AlexaService";
+import {AlexaRequestBody, AlexaRequestType, AlexaResponseBody, IntentRequest} from "./definitions/AlexaService";
 import {ResponseContext} from "./definitions/Handler";
-import {Context as SkillContext} from "./definitions/SkillContext";
+import {Attributes, RequestContext as SkillContext} from "./definitions/SkillContext";
 
-let Frames = require("./definitions/FrameDirectory");
-let Views = require("./definitions/ViewsDirectory");
+import * as Frames from "./definitions/FrameDirectory";
+import * as Views from "./definitions/ViewsDirectory";
 
-// TODO: find workaround for this
-require("./handlers/Start");
-require("./views/AlexaStandard");
+import "./resources/requires";
 
 let handler = function (event: AlexaRequestBody, context: Context, callback: Callback): void {
 
@@ -78,18 +76,29 @@ let handler = function (event: AlexaRequestBody, context: Context, callback: Cal
     }
 
     try {
-        let currentFrame = event.session.attributes["_CurrentFrame"];
-        let ctx = new SkillContext(event, context, callback, event.session.attributes);
+        let ctx = new SkillContext(event, context, callback);
+        // TODO: load attributes from data store when new
+        let attributes = new Attributes(event.session.attributes);
+        let frame = Frames[attributes["_CurrentFrame"] || "Start"];
+        let intent = getIntent(event);
 
-        let frame = Frames[currentFrame || "Start"];
+        if (event.session.new && "NewSession" in frame.actions) {
+            frame = frame.actions["NewSession"](attributes, ctx);
+        } else if (intent in frame.actions) {
+            frame = frame.actions[intent](attributes, ctx);
+        } else {
+            frame = frame.unhandled(attributes, ctx);
+        }
 
-        let responseCtx: ResponseContext = frame.entry(ctx);
+        attributes["_CurrentFrame"] = frame.id;
 
-        console.log("model: " + JSON.stringify(responseCtx.model));
+        let responseCtx: ResponseContext = frame.entry(attributes, ctx);
 
         let view = Views["AlexaStandard"];
 
-        let response = view.render(responseCtx.model);
+        let response: AlexaResponseBody = view.render(responseCtx.model);
+
+        response.sessionAttributes = attributes;
 
         console.log("response: %j", response);
 
@@ -101,5 +110,19 @@ let handler = function (event: AlexaRequestBody, context: Context, callback: Cal
     }
 };
 
+function getIntent(event: AlexaRequestBody): string {
+
+    let type: AlexaRequestType = event.request.type;
+
+    if (type === "LaunchRequest") {
+        return "LaunchRequest";
+    } else if (type === "SessionEndedRequest") {
+        return "SessionEndedRequest";
+    } else if (type === "IntentRequest") {
+        return (event.request as IntentRequest).intent.name;
+    } else {
+        throw new Error("Unknown request type: " + JSON.stringify(event.request));
+    }
+}
 
 export default handler;
