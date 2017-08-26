@@ -30,7 +30,7 @@ export class ResponseContext {
 
 export class ResponseModel {
     speech: string;
-    reprompt: string;
+    reprompt?: string;
 }
 
 export interface ReturnsResponseContext {
