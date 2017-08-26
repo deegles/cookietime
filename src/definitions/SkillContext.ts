@@ -1,41 +1,58 @@
 import {Callback, Context as LambdaContext} from "aws-lambda";
 import {AlexaRequestBody} from "./AlexaService";
 
-namespace Skill {
-    export class Context {
-        constructor(request: AlexaRequestBody, event: LambdaContext, callback: Callback, _this?: any) {
-            if (_this) {
-                Object.assign(this, _this);
-            }
+export class RequestContext {
+    constructor(request: AlexaRequestBody, event: LambdaContext, callback: Callback) {
+        this.request = request;
+        this.event = event;
+        this.callback = callback;
+    }
 
-            this.request = request;
-            this.event = event;
-            this.callback = callback;
-        }
+    request: AlexaRequestBody;
 
-        request: AlexaRequestBody;
+    event: LambdaContext;
 
-        event: LambdaContext;
+    callback: Callback;
 
-        callback: Callback;
+    get(prop): any {
+        console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);
+        return this[prop];
+    }
 
-        get(prop): any {
-            console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);
-            return this[prop];
-        }
+    set(prop, value): boolean {
+        console.log(`Adding prop ${prop}...`);
 
-        set(prop, value): boolean {
-            console.log(`Adding prop ${prop}...`);
+        return this[prop] = value;
+    }
 
-            return this[prop] = value;
-        }
+    delete(prop): boolean {
+        console.log(`Deleting prop ${prop}...`);
 
-        delete(prop): boolean {
-            console.log(`Deleting prop ${prop}...`);
-
-            return delete this[prop];
-        }
+        return delete this[prop];
     }
 }
 
-export = Skill;
+export class Attributes {
+    constructor(props?: any) {
+        if (props) {
+            Object.assign(this, props);
+        }
+    }
+
+    get(prop): any {
+        console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);
+        return this[prop];
+    }
+
+    set(prop, value): boolean {
+        console.log(`Adding prop ${prop}...`);
+
+        return this[prop] = value;
+    }
+
+    delete(prop): boolean {
+        console.log(`Deleting prop ${prop}...`);
+
+        return delete this[prop];
+    }
+}
