@@ -8,7 +8,7 @@ import {Attributes, RequestContext as SkillContext} from "./definitions/SkillCon
 import * as Frames from "./definitions/FrameDirectory";
 import * as Views from "./definitions/ViewsDirectory";
 
-import "./resources/requires";
+import "./resources/imports";
 
 let handler = function (event: AlexaRequestBody, context: Context, callback: Callback): void {
 
