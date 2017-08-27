@@ -1,7 +1,9 @@
 "use strict";
 import * as aws from "aws-sdk";
+import {DocumentClient} from "aws-sdk/clients/dynamodb";
 import * as LZUTF8 from "lzutf8";
-let doc;
+
+let _doc: DocumentClient;
 
 let newTableParams = {
     TableName: "",
@@ -26,18 +28,22 @@ let newTableParams = {
 export class DAL {
     constructor(table: string) {
         this.table = table;
+
+        if (!_doc) {
+            _doc = new aws.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
+        }
+
+        this.doc = _doc;
     }
+
+    doc: DocumentClient;
 
     table: string;
 
-    get = function (userId) {
+    get = (userId) => {
         return new Promise((resolve, reject) => {
             if (!this.table) {
                 reject("DynamoDB Table name is not set.");
-            }
-
-            if (!doc) {
-                doc = new aws.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
             }
 
             let params = {
@@ -48,7 +54,7 @@ export class DAL {
                 ConsistentRead: true
             };
 
-            doc.get(params, (err, data) => {
+            this.doc.get(params, (err, data) => {
                 if (err) {
                     console.log("get error: " + JSON.stringify(err, undefined, 4));
 
@@ -87,17 +93,13 @@ export class DAL {
                 }
             });
         });
-    };
+    }
 
-    set = function (userId, data) {
+    set = (userId, data) => {
         return new Promise((resolve, reject) => {
             try {
                 if (!this.table) {
                     return reject(new Error("DynamoDB Table name is not set."));
-                }
-
-                if (!doc) {
-                    doc = new aws.DynamoDB.DocumentClient({apiVersion: "2012-08-10"});
                 }
 
                 let compressed = LZUTF8.compress(JSON.stringify(data));
@@ -109,7 +111,7 @@ export class DAL {
                     TableName: this.table
                 };
 
-                doc.put(params, (err, data) => {
+                this.doc.put(params, (err, data) => {
                     if (err) {
                         return reject(new Error("Error during DynamoDB put:" + err));
                     }
@@ -119,7 +121,7 @@ export class DAL {
                 reject(err);
             }
         });
-    };
+    }
 }
 
 function isEmptyObject(obj) {
