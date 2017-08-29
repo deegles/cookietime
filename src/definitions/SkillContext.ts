@@ -34,17 +34,31 @@ export class RequestContext {
 
 export class Attributes {
     constructor(props?: any) {
+        this.FrameStack = [];
+        this.CookieCounter = "0";
+
         if (props) {
             Object.assign(this, props);
         }
+
+        if (!this.CurrentFrame) {
+            this.CurrentFrame = "Start";
+        }
     }
 
-    get(prop): any {
+    FrameStack: Array<string>;
+
+    CurrentFrame: string;
+
+    CookieCounter: string;
+
+    get(prop: string): any {
         console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);
+
         return this[prop];
     }
 
-    set(prop, value): boolean {
+    set(prop: string, value: any): boolean {
         console.log(`Adding prop ${prop}...`);
 
         return this[prop] = value;
