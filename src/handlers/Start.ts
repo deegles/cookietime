@@ -7,7 +7,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
     let model = new ResponseModel();
 
-    model.speech = "hello";
+    model.speech = "It's cookie time. Do you want to cook?";
     model.reprompt = "hello again";
 
     attr["myprop"] = "1";
@@ -17,12 +17,21 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
 let actionMap = {
     "LaunchRequest": (attr: Attributes) => {
-        attr["launch"] = 1;
         return Frames["Start"];
     },
-    "AMAZON.NoIntent": (attr: Attributes) => {
-        attr["no"] = 1;
-        return Frames["InProgress"];
+    "CookieIntent": (attr: Attributes) => {
+        attr.FrameStack.push("Start");
+        return Frames["Cookie"];
+    },
+    "AMAZON.YesIntent": (attr: Attributes) => {
+        attr.FrameStack.push("Start");
+        return Frames["Cookie"];
+    },
+    "SessionEndedRequest": (attr: Attributes) => {
+        console.log("Session ended in start!");
+        attr.CurrentFrameId = "Start";
+        attr.FrameStack = [];
+        return Frames["Start"];
     }
 };
 

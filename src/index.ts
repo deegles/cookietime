@@ -89,7 +89,7 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
             attributes = new Attributes(event.session.attributes);
         }
 
-        let frame = Frames[attributes["_CurrentFrame"] || "Start"];
+        let frame = Frames[attributes.CurrentFrameId];
         let intent = getIntent(event);
 
         if (event.session.new && "NewSession" in frame.actions) {
@@ -100,7 +100,7 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
             frame = frame.unhandled(attributes, ctx);
         }
 
-        attributes["_CurrentFrame"] = frame.id;
+        attributes.CurrentFrameId = frame.id;
 
         let responseCtx: ResponseContext = frame.entry(attributes, ctx);
 
@@ -110,14 +110,13 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
 
         response.sessionAttributes = attributes;
 
-        console.log("response: %j", response);
+        console.log("response:\n%j", response);
 
         if (response.response.shouldEndSession || intent === "SessionEndedRequest") {
             await dal.set(customerId, attributes);
         }
 
         callback(undefined, response);
-
     } catch (err) {
         console.log("Error: " + JSON.stringify(err));
         callback(err, undefined);

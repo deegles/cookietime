@@ -1,4 +1,5 @@
 import {Callback, Context as LambdaContext} from "aws-lambda";
+import * as big from "bignumber.js";
 import {AlexaRequestBody} from "./AlexaService";
 
 export class RequestContext {
@@ -35,22 +36,22 @@ export class RequestContext {
 export class Attributes {
     constructor(props?: any) {
         this.FrameStack = [];
-        this.CookieCounter = "0";
+        this.CookieCounter = new big("0");
 
         if (props) {
             Object.assign(this, props);
         }
 
-        if (!this.CurrentFrame) {
-            this.CurrentFrame = "Start";
+        if (!this.CurrentFrameId) {
+            this.CurrentFrameId = "Start";
         }
     }
 
     FrameStack: Array<string>;
 
-    CurrentFrame: string;
+    CurrentFrameId: string;
 
-    CookieCounter: string;
+    CookieCounter: big.BigNumber;
 
     get(prop: string): any {
         console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);

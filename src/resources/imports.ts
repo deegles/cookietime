@@ -5,6 +5,7 @@
  */
 
 // Handlers
+import "../handlers/Cookie";
 import "../handlers/InProgress";
 import "../handlers/Start";
 

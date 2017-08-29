@@ -9,7 +9,7 @@
   "author": "Diego Benitez <diego@vokkal.co>",
   "license": "SEE LICENSE IN License.txt",
   "dependencies": {
-    "big-integer": "^1.6.24",
+    "bignumber.js": "^4.0.2",
     "lzutf8": "^0.4.6"
   }
 }
