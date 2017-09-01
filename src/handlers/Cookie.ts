@@ -1,6 +1,7 @@
 import * as big from "bignumber.js";
 import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
+import {Humanize} from "../resources/humanize";
 
 import * as Frames from "../definitions/FrameDirectory";
 
@@ -11,7 +12,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     console.log("cookies: " + JSON.stringify(attr.CookieCounter));
     let counter: big.BigNumber = new big(attr.CookieCounter).add(1);
 
-    model.speech = `Your cookie count is: ${counter.toExponential(2)}`;
+    model.speech = `Your cookie count is: ${Humanize(counter, 3)}`;
     model.reprompt = model.speech;
 
     attr.CookieCounter = counter;
@@ -45,3 +46,5 @@ let unhandled = () => {
 };
 
 new Frame("Cookie", entry, unhandled, actionMap);
+
+// https://en.wikipedia.org/wiki/Names_of_large_numbers
