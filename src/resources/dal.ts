@@ -82,8 +82,6 @@ export class DAL {
                         reject(err);
                     }
                 } else {
-                    console.log("Fetched data: %j", data);
-
                     if (isEmptyObject(data)) {
                         resolve({});
                     } else {
