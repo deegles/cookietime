@@ -17,6 +17,8 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
     attr.CookieCounter = counter;
 
+    attr.Model = model;
+
     return new ResponseContext(model);
 };
 
@@ -25,18 +27,20 @@ let actionMap = {
         return Frames["Start"];
     },
     "AMAZON.RepeatIntent": (attr: Attributes) => {
-        return Frames["Cookie"];
+        attr.FrameStack.push("Cookie");
+        return Frames["Repeat"];
     },
     "CookieIntent": (attr: Attributes) => {
         return Frames["Cookie"];
     },
     "AMAZON.NoIntent": (attr: Attributes) => {
-        return Frames["InProgress"];
+        return Frames[attr.FrameStack.pop() || "InProgress"];
     },
     "SessionEndedRequest": (attr: Attributes) => {
         console.log("Session ended in cookie!");
         attr.CurrentFrameId = "Start";
         attr.FrameStack = [];
+        delete attr.Model;
         return Frames["Start"];
     }
 };
@@ -46,5 +50,3 @@ let unhandled = () => {
 };
 
 new Frame("Cookie", entry, unhandled, actionMap);
-
-// https://en.wikipedia.org/wiki/Names_of_large_numbers

@@ -10,7 +10,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     model.speech = "It's cookie time. Do you want to cook?";
     model.reprompt = "hello again";
 
-    attr["myprop"] = "1";
+    attr.Model = model;
 
     return new ResponseContext(model);
 };
@@ -18,6 +18,10 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 let actionMap = {
     "LaunchRequest": (attr: Attributes) => {
         return Frames["Start"];
+    },
+    "AMAZON.RepeatIntent": (attr: Attributes) => {
+        attr.FrameStack.push("Start");
+        return Frames["Repeat"];
     },
     "CookieIntent": (attr: Attributes) => {
         attr.FrameStack.push("Start");
@@ -31,6 +35,7 @@ let actionMap = {
         console.log("Session ended in start!");
         attr.CurrentFrameId = "Start";
         attr.FrameStack = [];
+        delete attr.Model;
         return Frames["Start"];
     }
 };
