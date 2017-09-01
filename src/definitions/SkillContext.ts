@@ -37,14 +37,13 @@ export class Attributes {
     constructor(props?: any) {
         this.FrameStack = [];
         this.CookieCounter = new big("0");
+        this.CurrentFrameId = "Start";
+
 
         if (props) {
             Object.assign(this, props);
         }
 
-        if (!this.CurrentFrameId) {
-            this.CurrentFrameId = "Start";
-        }
     }
 
     FrameStack: Array<string>;
