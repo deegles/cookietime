@@ -6,11 +6,12 @@ export function Humanize(n: big.BigNumber, round?: number): string {
     let str = n.toFixed(0), units, tens, scales, start, end, chunks, chunksLen, chunk, ints, i, word, words,
         and = "and";
 
-    if (round && round > 0 && str.length > round) {
-        let rounded = str.slice(0, round) + "".padEnd(str.length - round, "0");
+    let shouldRound: boolean = round && round > 0 && str.length > round;
+    if (shouldRound) {
+        let rounded = str.slice(0, round).toString().padEnd(str.length - round, "0");
 
         if (new big(rounded).eq(n)) {
-            round = 0;
+            shouldRound = false;
         } else {
             str = rounded;
         }
@@ -92,7 +93,7 @@ export function Humanize(n: big.BigNumber, round?: number): string {
 
     }
 
-    return `${round > 0 ? "about " : " "}${words.reverse().join(" ").toLowerCase()}`;
+    return `${shouldRound ? "about " : " "}${words.reverse().join(" ").toLowerCase()}`;
 }
 
 String.prototype.padEnd = function padEnd(targetLength, padString) {
