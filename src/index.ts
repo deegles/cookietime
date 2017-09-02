@@ -11,6 +11,7 @@ import * as Views from "./definitions/ViewsDirectory";
 import {DAL} from "./resources/dal";
 
 import "./resources/imports";
+import {getIntent} from "./resources/utilities";
 
 let dal = new DAL("deeglescoSkillUserSessions");
 
@@ -122,20 +123,5 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
         callback(err, undefined);
     }
 };
-
-function getIntent(event: AlexaRequestBody): string {
-
-    let type: AlexaRequestType = event.request.type;
-
-    if (type === "LaunchRequest") {
-        return "LaunchRequest";
-    } else if (type === "SessionEndedRequest") {
-        return "SessionEndedRequest";
-    } else if (type === "IntentRequest") {
-        return (event.request as IntentRequest).intent.name;
-    } else {
-        throw new Error("Unknown request type: " + JSON.stringify(event.request));
-    }
-}
 
 export default handler;
