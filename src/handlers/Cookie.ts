@@ -33,6 +33,9 @@ let actionMap = {
     "CookieIntent": (attr: Attributes) => {
         return Frames["Cookie"];
     },
+    "AMAZON.YesIntent": (attr: Attributes) => {
+        return Frames["Cookie"];
+    },
     "AMAZON.NoIntent": (attr: Attributes) => {
         return Frames[attr.FrameStack.pop() || "InProgress"];
     },

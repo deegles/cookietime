@@ -3,6 +3,7 @@ import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 import * as Frames from "../definitions/FrameDirectory";
+import {getIntent} from "../resources/utilities";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
@@ -18,21 +19,23 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     return new ResponseContext(model);
 };
 
-let actionMap = {
-    "AMAZON.RepeatIntent": (attr: Attributes) => {
-        return Frames["Repeat"];
-    },
-    "SessionEndedRequest": (attr: Attributes) => {
-        console.log("Session ended in repeat!");
-        attr.CurrentFrameId = "Start";
-        attr.FrameStack = [];
-        delete attr.Model;
-        return Frames["Start"];
-    }
-};
+let actionMap = {};
 
-let unhandled = (attr: Attributes) => {
-    return Frames[attr.FrameStack.pop() || "Start"];
+let unhandled = (attr: Attributes, ctx: RequestContext) => {
+    let frame = Frames[attr.FrameStack.pop() || "Start"];
+
+    let event = ctx.request;
+    let intent = getIntent(event);
+
+    if (event.session.new && "NewSession" in frame.actions) {
+        frame = frame.actions["NewSession"](attr, ctx);
+    } else if (intent in frame.actions) {
+        frame = frame.actions[intent](attr, ctx);
+    } else {
+        frame = frame.unhandled(attr, ctx);
+    }
+
+    return frame;
 };
 
 new Frame("Repeat", entry, unhandled, actionMap);
