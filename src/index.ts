@@ -93,6 +93,10 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
         let frame = Frames[attributes.CurrentFrameId];
         let intent = getIntent(event);
 
+        if (!frame) {
+            return callback(new Error("Could not find frame: " + attributes.CurrentFrameId), undefined);
+        }
+
         if (event.session.new && "NewSession" in frame.actions) {
             frame = frame.actions["NewSession"](attributes, ctx);
         } else if (intent in frame.actions) {
@@ -114,6 +118,8 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
         console.log("response:\n%j", response);
 
         if (response.response.shouldEndSession || intent === "SessionEndedRequest") {
+            delete attributes.Model;
+            delete attributes.FrameStack;
             await dal.set(customerId, attributes);
         }
 
