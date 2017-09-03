@@ -59,8 +59,8 @@ export class Items {
 
     static Kitchens: {[Key in KitchenTypes]: Kitchen} = {
         Hobby: {
-            OvenLimit: 1,
-            AssistantLimit: 1,
+            OvenLimit: 2,
+            AssistantLimit: 0,
             baseCost: new Big(0),
             multiplier: 0,
             type: "Kitchen",

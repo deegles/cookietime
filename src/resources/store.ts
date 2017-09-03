@@ -29,7 +29,17 @@ export function calculateCost(item: Purchaseable, owned: number): big.BigNumber 
 export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
     let allItems: Array<Purchaseable> = [].concat(inv.Ovens, inv.Kitchen, inv.Assistants);
 
-    return allItems.some(i => {
+    let slotsAvailable: boolean = false;
+
+    if (item.type === "Oven") {
+        slotsAvailable = inv.Ovens.length < inv.Kitchen.OvenLimit;
+    } else if (item.type === "Assistant") {
+        slotsAvailable = inv.Assistants.length < inv.Kitchen.AssistantLimit;
+    }
+
+    let upgradeable: boolean = allItems.some(i => {
         return i.type === item.type && i.rank < item.rank;
     });
+
+    return slotsAvailable || upgradeable;
 }

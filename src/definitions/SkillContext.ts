@@ -1,6 +1,6 @@
 import {Callback, Context as LambdaContext} from "aws-lambda";
 import * as big from "bignumber.js";
-import {Inventory, Items} from "../resources/inventory";
+import {Inventory, Items, Purchaseable} from "../resources/inventory";
 import {AlexaRequestBody} from "./AlexaService";
 import {ResponseModel} from "./Handler";
 
@@ -40,6 +40,7 @@ export class Attributes {
         this.FrameStack = [];
         this.CookieCounter = new big("0");
         this.CurrentFrameId = "Start";
+        this.Upgrades = [];
         this.Inventory = {
             Kitchen: Items.Kitchens.Hobby,
             Ovens: [Items.Ovens.EasyBake],
@@ -61,6 +62,8 @@ export class Attributes {
     Model: ResponseModel;
 
     Inventory: Inventory;
+
+    Upgrades: Array<Purchaseable>;
 
     get(prop: string): any {
         console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);

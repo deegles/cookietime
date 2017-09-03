@@ -4,6 +4,7 @@ import {Attributes, RequestContext} from "../definitions/SkillContext";
 import {Humanize} from "../resources/humanize";
 
 import * as Frames from "../definitions/FrameDirectory";
+import {getPurchaseableItems} from "../resources/store";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
@@ -12,10 +13,16 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     console.log("cookies: " + JSON.stringify(attr.CookieCounter));
     let counter: big.BigNumber = new big(attr.CookieCounter).add(1);
 
-    model.speech = `Your cookie count is: ${Humanize(counter, 3)}`;
+    model.speech = `Your cookie count is: ${Humanize(counter, 3)}. `;
     model.reprompt = model.speech;
 
     attr.CookieCounter = counter;
+    attr.Upgrades = getPurchaseableItems(counter, attr.Inventory);
+
+    if (attr.Upgrades.length > 0) {
+        model.speech += "There are upgrades available.";
+        model.reprompt = "Say 'get upgrades' to hear what is available. ";
+    }
 
     attr.Model = model;
 
@@ -37,7 +44,10 @@ let actionMap = {
         return Frames["Cookie"];
     },
     "AMAZON.NoIntent": (attr: Attributes) => {
-        return Frames[attr.FrameStack.pop() || "InProgress"];
+        return Frames[attr.FrameStack.pop() || "Start"];
+    },
+    "CheckUpgradesIntent": (attr: Attributes) => {
+        return Frames["Store"];
     },
     "SessionEndedRequest": (attr: Attributes) => {
         console.log("Session ended in cookie!");
