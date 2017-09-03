@@ -10,16 +10,19 @@ export interface Purchaseable {
     baseCost: Big.BigNumber;
     multiplier: number;
     type: ItemType;
+    rank: number;
 }
 
 export interface Kitchen extends Purchaseable {
     OvenLimit: number;
     AssistantLimit: number;
+    id: KitchenTypes;
 }
 
 export interface Oven extends Purchaseable {
     hourlyRate: number;
     capacity: number;
+    id: OvenTypes;
 }
 
 export interface Assistant extends Purchaseable {
@@ -35,16 +38,20 @@ export class Items {
         EasyBake: {
             baseCost: new Big(25),
             multiplier: 1.03,
-            hourlyRate: 1,
+            hourlyRate: 2,
             capacity: 1,
-            type: "Oven"
+            type: "Oven",
+            id: "EasyBake",
+            rank: 1
         },
         HomeOven: {
             baseCost: new Big(100),
             multiplier: 1.1,
-            hourlyRate: 1,
-            capacity: 1,
-            type: "Oven"
+            hourlyRate: 8,
+            capacity: 4,
+            type: "Oven",
+            id: "HomeOven",
+            rank: 2
         }
     };
 
@@ -56,7 +63,9 @@ export class Items {
             AssistantLimit: 1,
             baseCost: new Big(0),
             multiplier: 0,
-            type: "Kitchen"
+            type: "Kitchen",
+            id: "Hobby",
+            rank: 1
         }
     };
 }
