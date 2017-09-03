@@ -1,25 +1,286 @@
 {
   "intents": [
     {
-      "intent": "AMAZON.YesIntent"
+      "name": "AMAZON.CancelIntent",
+      "samples": []
     },
     {
-      "intent": "AMAZON.NoIntent"
+      "name": "AMAZON.HelpIntent",
+      "samples": [
+        "help"
+      ]
     },
     {
-      "intent": "AMAZON.StopIntent"
+      "name": "AMAZON.MoreIntent",
+      "samples": []
     },
     {
-      "intent": "AMAZON.CancelIntent"
+      "name": "AMAZON.NavigateHomeIntent",
+      "samples": []
     },
     {
-      "intent": "AMAZON.HelpIntent"
+      "name": "AMAZON.NavigateSettingsIntent",
+      "samples": []
     },
     {
-      "intent": "AMAZON.RepeatIntent"
+      "name": "AMAZON.NextIntent",
+      "samples": []
     },
     {
-      "intent": "AMAZON.StartOverIntent"
+      "name": "AMAZON.NoIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.PageDownIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.PageUpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.PauseIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.PreviousIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.RepeatIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.ScrollDownIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.ScrollLeftIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.ScrollRightIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.ScrollUpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StartOverIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.YesIntent",
+      "samples": []
+    },
+    {
+      "name": "CheckUpgradesIntent",
+      "samples": [
+        "upgrade",
+        "upgrades",
+        "get upgrade",
+        "get upgrades",
+        "go to store",
+        "store",
+        "go to the store",
+        "go to upgrades",
+        "upgrade section",
+        "go to upgrade section",
+        "purchase",
+        "purchase upgrade",
+        "purchase oven",
+        "purchase {OVENS}",
+        "purchase {KITCHENS}",
+        "upgrade {OVENS}",
+        "upgrade {KITCHENS}"
+      ],
+      "slots": [
+        {
+          "name": "OVENS",
+          "type": "OVENS",
+          "samples": []
+        },
+        {
+          "name": "KITCHENS",
+          "type": "KITCHENS",
+          "samples": []
+        }
+      ]
+    },
+    {
+      "name": "CookieIntent",
+      "samples": [
+        "cookie",
+        "cookie time",
+        "it's cookie time",
+        "make a cookie",
+        "make cookies",
+        "bake",
+        "bake cookies",
+        "bake a cookie",
+        "activate",
+        "activate ovens",
+        "more cookies",
+        "more cookie",
+        "cookies",
+        "create a cookie",
+        "create cookies",
+        "bake time",
+        "baking time",
+        "bake more",
+        "cook",
+        "it's time to cook",
+        "time to cook",
+        "time to bake",
+        "it's time to bake",
+        "it's baking time",
+        "time to bake cookie",
+        "bake cookie"
+      ],
+      "slots": []
+    }
+  ],
+  "types": [
+    {
+      "name": "KITCHENS",
+      "values": [
+        {
+          "id": "1",
+          "name": {
+            "value": "hobby",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "2",
+          "name": {
+            "value": "mom and pop",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "3",
+          "name": {
+            "value": "entrepeneur",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "5",
+          "name": {
+            "value": "professional",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "8",
+          "name": {
+            "value": "city",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "13",
+          "name": {
+            "value": "state",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "21",
+          "name": {
+            "value": "national",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "34",
+          "name": {
+            "value": "global",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "55",
+          "name": {
+            "value": "solar system",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "89",
+          "name": {
+            "value": "galactic",
+            "synonyms": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "OVENS",
+      "values": [
+        {
+          "id": "1",
+          "name": {
+            "value": "easy bake",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "2",
+          "name": {
+            "value": "toaster",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "3",
+          "name": {
+            "value": "home",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "5",
+          "name": {
+            "value": "upgraded home",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "8",
+          "name": {
+            "value": "professional",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "13",
+          "name": {
+            "value": "industrial",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "21",
+          "name": {
+            "value": "continuous",
+            "synonyms": []
+          }
+        },
+        {
+          "id": "34",
+          "name": {
+            "value": "upgraded continuous",
+            "synonyms": []
+          }
+        }
+      ]
     }
   ]
 }
