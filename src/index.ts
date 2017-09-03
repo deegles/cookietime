@@ -119,7 +119,7 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
 
         if (response.response.shouldEndSession || intent === "SessionEndedRequest") {
             delete attributes.Model;
-            delete attributes.FrameStack;
+            delete attributes["FrameStack"];
             await dal.set(customerId, attributes);
         }
 
