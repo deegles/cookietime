@@ -143,6 +143,26 @@
         "bake cookie"
       ],
       "slots": []
+    },
+    {
+      "name": "EatCookieIntent",
+      "samples": [
+        "eat a cookie",
+        "eat",
+        "eat {quantity}",
+        "eat {quantity} cookies",
+        "have {quantity} cookie",
+        "have {quantity} cookies",
+        "have a cookie",
+        "destroy cookie"
+      ],
+      "slots": [
+        {
+          "name": "quantity",
+          "type": "AMAZON.NUMBER",
+          "samples": []
+        }
+      ]
     }
   ],
   "types": [
