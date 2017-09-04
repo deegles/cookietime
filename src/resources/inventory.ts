@@ -1,9 +1,9 @@
 import Big = require("bignumber.js");
 
 export interface Inventory {
-    Kitchen: Kitchen;
-    Ovens: Array<Oven>;
-    Assistants: Array<Assistant>;
+    Kitchen: KitchenTypes;
+    Ovens: Array<OvenTypes>;
+    Assistants: Array<AssistantTypes>;
 }
 
 export interface Purchaseable {
@@ -31,6 +31,7 @@ export interface Assistant extends Purchaseable {
 
 export type ItemType = "Oven" | "Assistant" | "Kitchen";
 export type OvenTypes = "EasyBake" | "HomeOven";
+export type AssistantTypes = "PartTime";
 export type KitchenTypes = "Hobby";
 
 export class Items {
@@ -55,7 +56,15 @@ export class Items {
         }
     };
 
-    // static Assistants
+    static Assistants: {[Key in AssistantTypes]: Assistant} = {
+        PartTime: {
+            baseCost: new Big(100),
+            multiplier: 1.07,
+            type: "Assistant",
+            rank: 1,
+            duration: 1
+        }
+    };
 
     static Kitchens: {[Key in KitchenTypes]: Kitchen} = {
         Hobby: {
