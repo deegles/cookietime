@@ -6,6 +6,7 @@
 
 // If you're getting a "Cannot read property 'entry' of undefined" error you probably forgot to add the frame here
 import "../handlers/Cookie";
+import "../handlers/Eat";
 import "../handlers/Repeat";
 import "../handlers/Start";
 import "../handlers/Store";

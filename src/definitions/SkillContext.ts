@@ -39,6 +39,7 @@ export class Attributes {
     constructor(props?: any) {
         this.FrameStack = [];
         this.CookieCounter = new big("0");
+        this.CookiesEaten = new big("0");
         this.CurrentFrameId = "Start";
         this.Upgrades = [];
         this.Inventory = {
@@ -58,6 +59,8 @@ export class Attributes {
     CurrentFrameId: string;
 
     CookieCounter: big.BigNumber;
+
+    CookiesEaten: big.BigNumber;
 
     Model: ResponseModel;
 

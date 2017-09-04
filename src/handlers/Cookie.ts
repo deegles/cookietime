@@ -37,6 +37,10 @@ let actionMap = {
         attr.FrameStack.push("Cookie");
         return Frames["Repeat"];
     },
+    "EatCookieIntent": (attr: Attributes) => {
+        attr.FrameStack.push("Cookie");
+        return Frames["Eat"];
+    },
     "CookieIntent": (attr: Attributes) => {
         return Frames["Cookie"];
     },

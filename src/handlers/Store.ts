@@ -27,7 +27,6 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
 let actionMap = {
     "LaunchRequest": (attr: Attributes) => {
-        attr["launch"] = 1;
         return Frames["Start"];
     }
 };
