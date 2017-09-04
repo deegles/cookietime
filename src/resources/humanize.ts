@@ -3,12 +3,12 @@ import * as big from "bignumber.js";
 // Adapted from: https://stackoverflow.com/questions/5529934/javascript-numbers-to-words
 export function Humanize(n: big.BigNumber, round?: number): string {
 
-    let str = n.toFixed(0), units, tens, scales, start, end, chunks, chunksLen, chunk, ints, i, word, words,
+    let str = "" + n.toFixed(0), units, tens, scales, start, end, chunks, chunksLen, chunk, ints, i, word, words,
         and = "and";
 
     let shouldRound: boolean = round && round > 0 && str.length > round;
     if (shouldRound) {
-        let rounded = str.slice(0, round).toString().padEnd(str.length - round, "0");
+        let rounded = str.slice(0, round) + "".padEnd(str.length - round, "0");
 
         if (new big(rounded).eq(n)) {
             shouldRound = false;
