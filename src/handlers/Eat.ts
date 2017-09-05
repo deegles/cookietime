@@ -3,9 +3,8 @@ import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 import {IntentRequest} from "../definitions/AlexaService";
-import * as Frames from "../definitions/FrameDirectory";
 import {Humanize} from "../resources/humanize";
-import {getIntent} from "../resources/utilities";
+import {redirect} from "../resources/utilities";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
@@ -50,21 +49,4 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
 let actionMap = {};
 
-let unhandled = (attr: Attributes, ctx: RequestContext) => {
-    let frame = Frames[attr.FrameStack.pop() || "Start"];
-
-    let event = ctx.request;
-    let intent = getIntent(event);
-
-    if (event.session.new && "NewSession" in frame.actions) {
-        frame = frame.actions["NewSession"](attr, ctx);
-    } else if (intent in frame.actions) {
-        frame = frame.actions[intent](attr, ctx);
-    } else {
-        frame = frame.unhandled(attr, ctx);
-    }
-
-    return frame;
-};
-
-new Frame("Eat", entry, unhandled, actionMap);
+new Frame("Eat", entry, redirect, actionMap);

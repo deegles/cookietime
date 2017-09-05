@@ -1,4 +1,6 @@
 import {AlexaRequestBody, AlexaRequestType, IntentRequest} from "../definitions/AlexaService";
+import * as Frames from "../definitions/FrameDirectory";
+import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 /**
  * Get the current intent
@@ -18,6 +20,23 @@ export function getIntent(event: AlexaRequestBody): string {
     } else {
         throw new Error("Unknown request type: " + JSON.stringify(event.request));
     }
+}
+
+export function redirect(attr: Attributes, ctx: RequestContext) {
+    let frame = Frames[attr.FrameStack.pop() || "Start"];
+
+    let event = ctx.request;
+    let intent = getIntent(event);
+
+    if (event.session.new && "NewSession" in frame.actions) {
+        frame = frame.actions["NewSession"](attr, ctx);
+    } else if (intent in frame.actions) {
+        frame = frame.actions[intent](attr, ctx);
+    } else {
+        frame = frame.unhandled(attr, ctx);
+    }
+
+    return frame;
 }
 
 String.prototype.padEnd = function padEnd(targetLength, padString) {
