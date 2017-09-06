@@ -1,8 +1,8 @@
 import {Callback, Context as LambdaContext} from "aws-lambda";
 import * as big from "bignumber.js";
-import {AssistantTypes, Inventory, Items, KitchenTypes, OvenTypes, Purchaseable} from "../resources/inventory";
 import {AlexaRequestBody} from "./AlexaService";
 import {ResponseModel} from "./Handler";
+import {AssistantTypes, Inventory, Items, KitchenTypes, OvenTypes, Purchaseable} from "./Inventory";
 
 export class RequestContext {
     constructor(request: AlexaRequestBody, event: LambdaContext, callback: Callback) {

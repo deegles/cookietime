@@ -2,7 +2,7 @@ import * as big from "bignumber.js";
 import {
     Assistant, AssistantTypes, Inventory, Items, ItemTypes, Kitchen, KitchenTypes, Oven, OvenTypes,
     Purchaseable
-} from "./inventory";
+} from "../definitions/Inventory";
 
 export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<ItemTypes> {
 
