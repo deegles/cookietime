@@ -9,33 +9,36 @@ export interface Inventory {
 export interface Purchaseable {
     baseCost: Big.BigNumber;
     multiplier: number;
-    type: ItemType;
+    type: ItemCategories;
     rank: number;
+    id: ItemTypes;
 }
 
 export interface Kitchen extends Purchaseable {
     OvenLimit: number;
     AssistantLimit: number;
-    id: KitchenTypes;
 }
 
 export interface Oven extends Purchaseable {
     hourlyRate: number;
     capacity: number;
-    id: OvenTypes;
 }
 
 export interface Assistant extends Purchaseable {
     duration: number;
 }
 
-export type ItemType = "Oven" | "Assistant" | "Kitchen";
+export type ItemCategories = "Oven" | "Assistant" | "Kitchen";
 export type OvenTypes = "EasyBake" | "HomeOven";
 export type AssistantTypes = "PartTime";
 export type KitchenTypes = "Hobby";
+export type ItemTypes = OvenTypes | AssistantTypes | KitchenTypes;
 
 export class Items {
-    static Ovens: {[Key in OvenTypes]: Oven} = {
+    static All: {[Key in ItemTypes]: Oven | Kitchen | Assistant } = {
+        /**
+         * Ovens
+         */
         EasyBake: {
             baseCost: new Big(25),
             multiplier: 1.03,
@@ -44,7 +47,7 @@ export class Items {
             type: "Oven",
             id: "EasyBake",
             rank: 1
-        },
+        } as Oven,
         HomeOven: {
             baseCost: new Big(100),
             multiplier: 1.1,
@@ -53,20 +56,21 @@ export class Items {
             type: "Oven",
             id: "HomeOven",
             rank: 2
-        }
-    };
-
-    static Assistants: {[Key in AssistantTypes]: Assistant} = {
+        } as Oven,
+        /**
+         * Assistants
+         */
         PartTime: {
             baseCost: new Big(100),
             multiplier: 1.07,
             type: "Assistant",
             rank: 1,
-            duration: 1
-        }
-    };
-
-    static Kitchens: {[Key in KitchenTypes]: Kitchen} = {
+            duration: 1,
+            id: "PartTime"
+        } as Assistant,
+        /**
+         * Kitchens
+         */
         Hobby: {
             OvenLimit: 2,
             AssistantLimit: 0,
@@ -75,6 +79,6 @@ export class Items {
             type: "Kitchen",
             id: "Hobby",
             rank: 1
-        }
+        } as Kitchen,
     };
 }
