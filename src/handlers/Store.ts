@@ -2,7 +2,7 @@ import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 import * as Frames from "../definitions/FrameDirectory";
-import {Assistant, ItemCategories, Items, Kitchen, Oven, Purchaseable} from "../definitions/inventory";
+import {Assistant, ItemCategories, Items, Kitchen, Oven, Purchaseable} from "../definitions/Inventory";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
