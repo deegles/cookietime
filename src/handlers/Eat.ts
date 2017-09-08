@@ -18,7 +18,10 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
     let model = new ResponseModel();
 
-    if (eatCount.eq(1) ) {
+    if (new Big(attr.CookieCounter).eq(0)) {
+        model.speech = `You have no cookies to eat. You have eaten ${Humanize(attr.CookiesEaten, 3)} cookies.`;
+        model.reprompt = `You have no cookies left. Bake some more.`;
+    } else if (eatCount.eq(1) ) {
         attr.CookieCounter = new Big(attr.CookieCounter).minus(1);
         attr.CookiesEaten = new Big(attr.CookiesEaten).plus(1);
 
@@ -30,10 +33,6 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
         model.speech = `You ate all your cookies. You have eaten ${Humanize(attr.CookiesEaten, 3)} cookies.`;
         model.reprompt = `You have zero cookies left.`;
-
-    } else if (new Big(attr.CookieCounter).eq(0)) {
-        model.speech = `You have no cookies to eat. You have eaten ${Humanize(attr.CookiesEaten, 3)} cookies.`;
-        model.reprompt = `You have no cookies left. Bake some more.`;
     } else {
         attr.CookieCounter = new Big(attr.CookieCounter).minus(eatCount);
         attr.CookiesEaten = new Big(attr.CookiesEaten).plus(eatCount);
