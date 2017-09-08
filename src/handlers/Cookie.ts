@@ -1,5 +1,5 @@
 import * as big from "bignumber.js";
-import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
+import {ActionMap, Frame, ResponseContext, ResponseModel, ReturnsFrame} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 import {Humanize} from "../resources/humanize";
 
@@ -29,11 +29,11 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     return new ResponseContext(model);
 };
 
-let actionMap = {
+let actionMap: ActionMap = {
     "LaunchRequest": (attr: Attributes) => {
         return Frames["Start"];
     },
-    "AMAZON.RepeatIntent": (attr: Attributes) => {
+    "RepeatIntent": (attr: Attributes) => {
         attr.FrameStack.push("Cookie");
         return Frames["Repeat"];
     },
@@ -44,10 +44,10 @@ let actionMap = {
     "CookieIntent": (attr: Attributes) => {
         return Frames["Cookie"];
     },
-    "AMAZON.YesIntent": (attr: Attributes) => {
+    "YesIntent": (attr: Attributes) => {
         return Frames["Cookie"];
     },
-    "AMAZON.NoIntent": (attr: Attributes) => {
+    "NoIntent": (attr: Attributes) => {
         return Frames[attr.FrameStack.pop() || "Start"];
     },
     "CheckUpgradesIntent": (attr: Attributes) => {

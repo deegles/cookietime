@@ -1,5 +1,6 @@
 import {AlexaRequestBody, AlexaRequestType, IntentRequest} from "../definitions/AlexaService";
 import * as Frames from "../definitions/FrameDirectory";
+import {Intents, SkillIntents} from "../definitions/Intents";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 /**
@@ -7,7 +8,7 @@ import {Attributes, RequestContext} from "../definitions/SkillContext";
  * @param event
  * @returns {any}
  */
-export function getIntent(event: AlexaRequestBody): string {
+export function getIntent(event: AlexaRequestBody): SkillIntents {
 
     let type: AlexaRequestType = event.request.type;
 
@@ -16,7 +17,7 @@ export function getIntent(event: AlexaRequestBody): string {
     } else if (type === "SessionEndedRequest") {
         return "SessionEndedRequest";
     } else if (type === "IntentRequest") {
-        return (event.request as IntentRequest).intent.name;
+        return Intents[(event.request as IntentRequest).intent.name];
     } else {
         throw new Error("Unknown request type: " + JSON.stringify(event.request));
     }

@@ -19,7 +19,7 @@ let actionMap = {
     "LaunchRequest": (attr: Attributes) => {
         return Frames["Start"];
     },
-    "AMAZON.RepeatIntent": (attr: Attributes) => {
+    "RepeatIntent": (attr: Attributes) => {
         attr.FrameStack.push("Start");
         return Frames["Repeat"];
     },
@@ -31,7 +31,7 @@ let actionMap = {
         attr.FrameStack.push("Start");
         return Frames["Cookie"];
     },
-    "AMAZON.YesIntent": (attr: Attributes) => {
+    "YesIntent": (attr: Attributes) => {
         attr.FrameStack.push("Start");
         return Frames["Cookie"];
     },
