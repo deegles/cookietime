@@ -3,6 +3,10 @@ import * as big from "bignumber.js";
 // Adapted from: https://stackoverflow.com/questions/5529934/javascript-numbers-to-words
 export function Humanize(n: big.BigNumber, round?: number): string {
 
+    if (!n.isBigNumber) {
+        n = new big(n);
+    }
+
     let str = "" + n.toFixed(0), units, tens, scales, start, end, chunks, chunksLen, chunk, ints, i, word, words,
         and = "and";
 
