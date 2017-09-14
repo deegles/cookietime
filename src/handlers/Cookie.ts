@@ -1,4 +1,4 @@
-import * as big from "bignumber.js";
+import * as Big from "bignumber.js";
 import {ActionMap, Frame, ResponseContext, ResponseModel, ReturnsFrame} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 import {Humanize} from "../resources/humanize";
@@ -6,12 +6,13 @@ import {Humanize} from "../resources/humanize";
 import * as Frames from "../definitions/FrameDirectory";
 import {getPurchaseableItems} from "../resources/store";
 
+
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
     let model = new ResponseModel();
 
     console.log("cookies: " + JSON.stringify(attr.CookieCounter));
-    let counter: big.BigNumber = new big(attr.CookieCounter).add(1);
+    let counter = new Big(attr.CookieCounter).add(1);
 
     model.speech = `Your cookie count is: ${Humanize(counter, 3)}. `;
     model.reprompt = model.speech;
