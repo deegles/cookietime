@@ -1,21 +1,82 @@
 import {Callback, Context as LambdaContext} from "aws-lambda";
-import * as big from "bignumber.js";
-import {AlexaRequestBody} from "./AlexaService";
+import * as Big from "bignumber.js";
+import {getIntent} from "../resources/utilities";
+import {AlexaRequestBody, IntentRequest, ResolutionStatus, SessionEndedRequest} from "./AlexaService";
 import {ResponseModel} from "./Handler";
-import {AssistantTypes, Inventory, Items, KitchenTypes, OvenTypes, Purchaseable} from "./Inventory";
+import {AssistantTypes, Inventory, KitchenTypes, OvenTypes} from "./Inventory";
 
-export class RequestContext {
+export interface RequestSlots {
+    resolution?: {
+        id: string;
+        name: string;
+    };
+    value: string;
+    error?: {
+        type: string;
+        message: string;
+    };
+}
+
+export interface RequestContext {
+    intent: string;
+
+    newSession?: boolean;
+
+    slots: { [Key: string]: RequestSlots };
+}
+
+export class AlexaRequestContext implements RequestContext {
     constructor(request: AlexaRequestBody, event: LambdaContext, callback: Callback) {
-        this.request = request;
-        this.event = event;
-        this.callback = callback;
+
+        let intent = getIntent(request);
+
+        this.intent = intent;
+        this.slots = {};
+
+        if (request.request.type === "SessionEndedRequest") {
+            let req = (request.request as SessionEndedRequest);
+
+            this.slots = {
+                "reason": {
+                    value: req.reason,
+                    error: req.error
+                }
+            };
+
+        } else if (request.request.type === "IntentRequest") {
+
+            let req = (request.request as IntentRequest);
+
+            if (req.intent.slots) {
+                Object.keys(req.intent.slots).forEach(slotName => {
+
+                    let slot = req.intent.slots[slotName];
+
+                    this.slots[slotName] = {
+                        value: slot.value
+                    };
+
+                    if (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) {
+                        // TODO: deal with multiple resolutions
+                        let resolution = slot.resolutions.resolutionsPerAuthority[0];
+                        if (resolution.status.code === ResolutionStatus.ER_SUCCESS_MATCH) {
+                            let value = resolution.values[0].value;
+                            this.slots[slotName].resolution.id = value.id;
+                            this.slots[slotName].resolution.name = value.name;
+                        }
+                    }
+                });
+            }
+        }
+
+        this.newSession = request.session && request.session.new;
     }
 
-    request: AlexaRequestBody;
+    newSession: boolean;
 
-    event: LambdaContext;
+    intent: string;
 
-    callback: Callback;
+    slots: { [Key: string]: RequestSlots };
 
     get(prop): any {
         console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);
@@ -38,8 +99,8 @@ export class RequestContext {
 export class Attributes {
     constructor(props?: any) {
         this.FrameStack = [];
-        this.CookieCounter = new big("0");
-        this.CookiesEaten = new big("0");
+        this.CookieCounter = new Big("0");
+        this.CookiesEaten = new Big("0");
         this.CurrentFrameId = "Start";
         this.Upgrades = [];
         this.Inventory = {
@@ -58,9 +119,9 @@ export class Attributes {
 
     CurrentFrameId: string;
 
-    CookieCounter: big.BigNumber;
+    CookieCounter: Big.BigNumber;
 
-    CookiesEaten: big.BigNumber;
+    CookiesEaten: Big.BigNumber;
 
     Model: ResponseModel;
 

@@ -1,9 +1,10 @@
 "use strict";
 import {Callback, Context} from "aws-lambda";
+import "source-map-support/register";
 import * as util from "util";
 import {AlexaRequestBody, AlexaRequestType, AlexaResponseBody, IntentRequest} from "./definitions/AlexaService";
 import {ResponseContext} from "./definitions/Handler";
-import {Attributes, RequestContext as SkillContext} from "./definitions/SkillContext";
+import {AlexaRequestContext, Attributes} from "./definitions/SkillContext";
 
 import * as Frames from "./definitions/FrameDirectory";
 import * as Views from "./definitions/ViewsDirectory";
@@ -81,7 +82,7 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
     }
 
     try {
-        let ctx = new SkillContext(event, context, callback);
+        let ctx = new AlexaRequestContext(event, context, callback);
 
         let attributes;
         if (event.session.new) {

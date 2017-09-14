@@ -1,9 +1,9 @@
 import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
-import {Attributes, RequestContext} from "../definitions/SkillContext";
+import {AlexaRequestContext, Attributes} from "../definitions/SkillContext";
 
 import * as Frames from "../definitions/FrameDirectory";
 
-let entry = (attr: Attributes, ctx: RequestContext) => {
+let entry = (attr: Attributes, ctx: AlexaRequestContext) => {
 
     let model = new ResponseModel();
 
