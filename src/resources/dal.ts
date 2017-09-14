@@ -85,7 +85,14 @@ export class DAL {
                     if (isEmptyObject(data)) {
                         resolve({});
                     } else {
-                        let obj = JSON.parse(LZUTF8.decompress(data.Item.cData.data));
+                        let obj = {};
+
+                        if (data && data.Item && data.Item["cData"] && data.Item["cData"]["data"]) {
+                            obj = JSON.parse(LZUTF8.decompress(data.Item["cData"]["data"]));
+                        } else if (data && data.Item && data.Item["mapAttr"]) {
+                            obj = data.Item["mapAttr"];
+                        }
+
                         resolve(obj);
                     }
                 }
