@@ -17,6 +17,39 @@ export const RequestType = {
     SessionEndedRequest: "SessionEndedRequest" as AlexaRequestType
 };
 
+/**
+ * An enumeration indicating whether the user has explicitly confirmed or denied the entire intent. */
+export type ConfirmationStatusType = "NONE" | "CONFIRMED" | "DENIED";
+
+export const ConfirmationStatus = {
+    NONE: "NONE" as ConfirmationStatusType,
+    CONFIRMED: "CONFIRMED" as ConfirmationStatusType,
+    DENIED: "DENIED" as ConfirmationStatusType
+};
+
+/**
+ * A code indicating the results of attempting to resolve the user utterance against the defined slot types. */
+export type ResolutionStatusCode =
+    "ER_SUCCESS_MATCH"
+    | "ER_SUCCESS_NO_MATCH"
+    | "ER_ERROR_TIMEOUT"
+    | "ER_ERROR_EXCEPTION";
+
+export const ResolutionStatus = {
+    /**
+     * The spoken value matched a value or synonym explicitly defined in your custom slot type. */
+    ER_SUCCESS_MATCH: "ER_SUCCESS_MATCH" as ResolutionStatusCode,
+    /**
+     *  The spoken value did not match any values or synonyms explicitly defined in your custom slot type. */
+    ER_SUCCESS_NO_MATCH: "ER_SUCCESS_NO_MATCH" as ResolutionStatusCode,
+    /**
+     *  An error occurred due to a timeout. */
+    ER_ERROR_TIMEOUT: "ER_ERROR_TIMEOUT" as ResolutionStatusCode,
+    /**
+     * An error occurred due to an exception during processing. */
+    ER_ERROR_EXCEPTION: "ER_ERROR_EXCEPTION" as ResolutionStatusCode
+};
+
 /** String literal with possible values. Used in place of an enum to allow string type.
  * USER_INITIATED: The user explicitly ended the session.
  * ERROR: An error occurred that caused the session to end.
@@ -207,11 +240,12 @@ export interface IntentRequest extends Request {
 export interface Intent {
     /** A string representing the name of the intent. */
     name: string;
+    confirmationStatus: ConfirmationStatusType;
     /** A map of key-value pairs that further describes what the user meant based on a predefined intent schema. The map can be empty.
      * The key is a string that describes the name of the slot. Type: string.
      * The value is an object of type slot. Type: object.
      * @see Slot */
-    slots: Slot[];
+    slots: { [Key: string]: Slot };
 }
 
 /**
@@ -221,9 +255,54 @@ export interface Intent {
 export interface Slot {
     /** A string that represents the name of the slot. */
     name: string;
+    /**
+     * An enumeration indicating whether the user has explicitly confirmed or denied the value of this slot. */
+    confirmationStatus: ConfirmationStatusType;
     /** A string that represents the value of the slot. The value is not required.
      * Note that AMAZON.LITERAL slot values sent to your service are always in all lower case. */
     value?: string;
+    /**
+     * A Resolutions object representing the results of resolving the words captured from the user’s utterance.
+     This is included for slots that use a custom slot type or a built-in slot type that you have extended with your
+     own values. Note that resolutions is not included for built-in slot types that you have not extended
+     */
+    resolutions: Resolutions;
+}
+
+export interface Resolutions {
+    /**
+     * An array of objects representing each possible authority for entity resolution. An authority represents the
+     * source for the data provided for the slot. For a custom slot type, the authority is the slot type you defined */
+    resolutionsPerAuthority: Array<Resolution>;
+}
+
+export interface Resolution {
+    /**
+     * The name of the authority for the slot values. For custom slot types, this authority label
+     * incorporates your skill ID and the slot type name. */
+    authority: string;
+    /**
+     * An object representing the status of entity resolution for the slot. */
+    status: {
+        code: ResolutionStatusCode;
+    };
+    /**
+     * An array of resolved values for the slot. */
+    values: Array<SlotResolution>;
+}
+
+export interface SlotResolution {
+    /**
+     * An object representing the resolved value for the slot,
+     * based on the user’s utterance and the slot type definition. */
+    value: {
+        /**
+         * The string for the resolved slot value. */
+        name: string;
+        /**
+         * The unique ID defined for the resolved slot value. This is based on the IDs defined in the slot type definition. */
+        id: string;
+    };
 }
 
 /** A SessionEndedRequest is an object that represents a request made to an Alexa skill to notify that a session was ended. */
