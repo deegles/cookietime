@@ -10,6 +10,7 @@
   "license": "SEE LICENSE IN License.txt",
   "dependencies": {
     "bignumber.js": "^4.0.2",
-    "lzutf8": "^0.4.6"
+    "lzutf8": "^0.4.6",
+    "source-map-support": "^0.4.18"
   }
 }
