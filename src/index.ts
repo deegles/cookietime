@@ -116,15 +116,19 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
 
         response.sessionAttributes = attributes;
 
-        console.log("response:\n%j", response);
-
         if (response.response.shouldEndSession || intent === "SessionEndedRequest") {
             delete attributes.Model;
             delete attributes["FrameStack"];
             await dal.set(customerId, attributes);
         }
 
-        callback(undefined, response);
+        /**
+         *  The skill cannot return a response to SessionEndedRequest */
+        if (intent === "SessionEndedRequest") {
+            callback();
+        } else {
+            callback(undefined, response);
+        }
     } catch (err) {
         console.log("Error: " + JSON.stringify(err));
         callback(err, undefined);
