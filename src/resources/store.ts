@@ -8,24 +8,20 @@ export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<
 
     let available: Array<ItemTypes> = [];
 
-    let allItems: Array<ItemTypes> = [].concat(inv.Ovens, inv.Kitchen, inv.Assistants);
+    let allItems: Array<ItemTypes> = Object.keys(Items.All) as Array<ItemTypes>;
 
     for (let itemIndex = 0; itemIndex < allItems.length; itemIndex++) {
 
-        let itemId = allItems[itemIndex];
+        let item = Items.All[allItems[itemIndex]] as Purchaseable;
 
-        let item = Items.All[itemId] as Purchaseable;
-
-        let owned = allItems.filter(invItem => {
+        let owned = [].concat(inv.Ovens, inv.Assistants).filter(invItem => {
             return Items.All[invItem].type === item.type; // TODO: refactor into helper function
         });
-
-        console.log("owned: " + JSON.stringify(owned));
 
         let cost = calculateCost(item, owned.length);
 
         if (cost.lessThanOrEqualTo(num) && canUpgrade(inv, item)) {
-            available.push(itemId);
+            available.push(item.id);
         }
     }
 
@@ -49,9 +45,8 @@ export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
     }
 
     let upgradeable: boolean = allItems.some(itemId => {
-        let i = Items.All[itemId] as Purchaseable;
-
-        return i.type === item.type && i.rank < item.rank;
+        let invItem = Items.All[itemId] as Purchaseable;
+        return invItem.type === item.type && invItem.rank < item.rank;
     });
 
     return slotsAvailable || upgradeable;
