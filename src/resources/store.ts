@@ -17,7 +17,7 @@ export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<
         let item = Items.All[itemId] as Purchaseable;
 
         let owned = allItems.filter(invItem => {
-            return invItem === itemId;
+            return Items.All[invItem].type === item.type; // TODO: refactor into helper function
         });
 
         console.log("owned: " + JSON.stringify(owned));
