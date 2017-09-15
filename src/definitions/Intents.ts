@@ -22,7 +22,8 @@ export type AlexaIntents =
     | "CookieIntent"
     | "EatCookieIntent"
     | "LaunchRequest"
-    | "SessionEndedRequest";
+    | "SessionEndedRequest"
+    | "PurchaseUpgradeIntent";
 
 export type SkillIntents =
     "CancelIntent"
@@ -48,7 +49,8 @@ export type SkillIntents =
     | "CookieIntent"
     | "EatCookieIntent"
     | "LaunchRequest"
-    | "SessionEndedRequest";
+    | "SessionEndedRequest"
+    | "PurchaseUpgradeIntent";
 
 export type AllIntentNames = AlexaIntents;
 
@@ -76,5 +78,6 @@ export const Intents: {[Key in AllIntentNames]: SkillIntents } = {
     "CookieIntent": "CookieIntent",
     "EatCookieIntent": "EatCookieIntent",
     "LaunchRequest": "LaunchRequest",
-    "SessionEndedRequest": "SessionEndedRequest"
+    "SessionEndedRequest": "SessionEndedRequest",
+    "PurchaseUpgradeIntent": "PurchaseUpgradeIntent"
 };

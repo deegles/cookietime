@@ -2,7 +2,7 @@ import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 import * as Frames from "../definitions/FrameDirectory";
-import {Assistant, ItemCategories, Items, Kitchen, Oven, Purchaseable} from "../definitions/Inventory";
+import {Items} from "../definitions/Inventory";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
@@ -12,7 +12,9 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
             let item = Items.All[itemId];
 
             return item.id;
-        }).join(", ");
+        }).join(", ") + ". What would you like to purchase?";
+
+    model.reprompt = "What would you like to purchase?";
 
     return new ResponseContext(model);
 };
@@ -20,7 +22,13 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 let actionMap = {
     "LaunchRequest": (attr: Attributes) => {
         return Frames["Start"];
-    }
+    },
+    "PurchaseUpgradeIntent": (attr: Attributes) => {
+        return Frames["Purchase"];
+    },
+    "EatCookieIntent": (attr: Attributes) => {
+        return Frames["Eat"];
+    },
 };
 
 let unhandled = () => {

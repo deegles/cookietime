@@ -35,6 +35,9 @@ let actionMap = {
         attr.FrameStack.push("Start");
         return Frames["Cookie"];
     },
+    "PurchaseUpgradeIntent": (attr: Attributes) => {
+        return Frames["Purchase"];
+    },
     "SessionEndedRequest": (attr: Attributes) => {
         console.log("Session ended in start!");
         attr.CurrentFrameId = "Start";
