@@ -11,15 +11,20 @@ import {Attributes, RequestContext} from "../definitions/SkillContext";
 export function getIntent(event: AlexaRequestBody): SkillIntents {
 
     let type: AlexaRequestType = event.request.type;
+    let intent;
 
     if (type === "LaunchRequest") {
-        return "LaunchRequest";
+        intent = "LaunchRequest";
     } else if (type === "SessionEndedRequest") {
-        return "SessionEndedRequest";
+        intent = "SessionEndedRequest";
     } else if (type === "IntentRequest") {
-        return Intents[(event.request as IntentRequest).intent.name];
+        intent = Intents[(event.request as IntentRequest).intent.name];
+    }
+
+    if (intent) {
+        return intent;
     } else {
-        throw new Error("Unknown request type: " + JSON.stringify(event.request));
+        throw new Error("Unknown or unregistered request type: " + JSON.stringify(event.request));
     }
 }
 
