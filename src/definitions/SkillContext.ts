@@ -115,6 +115,14 @@ export class Attributes {
             Object.assign(this, props);
         }
 
+        if (!this.CookieCounter.isBigNumber) {
+            this.CookieCounter = new Big(this.CookieCounter);
+        }
+
+        if (!this.CookiesEaten.isBigNumber) {
+            this.CookiesEaten = new Big(this.CookiesEaten);
+        }
+
     }
 
     FrameStack: Array<string>;
