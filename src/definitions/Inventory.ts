@@ -35,7 +35,7 @@ export type KitchenTypes = "Hobby";
 export type ItemTypes = OvenTypes | AssistantTypes | KitchenTypes;
 
 export class Items {
-    static All: {[Key in ItemTypes]: Oven | Kitchen | Assistant } = {
+    static All: {[Key in ItemTypes]: Purchaseable } = {
         /**
          * Ovens
          */
