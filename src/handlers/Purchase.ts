@@ -33,14 +33,13 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
         let item = Items.All[itemId];
 
         function byRank(a: ItemTypes, b: ItemTypes) {
-            return Items.All[a].rank - Items.All[b].rank;
+            return Items.All[b].rank - Items.All[a].rank;
         }
 
         if (item.type === "Oven") {
             let owned = allItems.filter(invItem => {
                 return Items.All[invItem].type === "Oven";
             });
-
 
             console.log("owned: " + owned);
             let cost = calculateCost(item, owned.length);
