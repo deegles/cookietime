@@ -6,7 +6,7 @@ import * as util from "util";
 import {
     AlexaRequestBody, AlexaRequestType, AlexaResponseBody, IntentRequest
 } from "./definitions/AlexaService";
-import {BotFrameWorkRequestBody} from "./definitions/BotFrameworkService";
+import {BotFrameworkActivity} from "./definitions/BotFrameworkService";
 import {RequestBody} from "./definitions/Common";
 import * as Frames from "./definitions/FrameDirectory";
 import {ResponseContext} from "./definitions/Handler";
@@ -15,6 +15,7 @@ import * as Views from "./definitions/ViewsDirectory";
 
 import {DAL} from "./resources/dal";
 
+import {sendActivity} from "./resources/BotFramework";
 import "./resources/imports";
 import {query} from "./resources/LUIS";
 import {getBotframeworkToken} from "./resources/MSATokenService";
@@ -45,12 +46,11 @@ let handler = async function (APIEvent: any, context: Context, callback: Callbac
 
         await routeAPIGatewayEvent(APIEvent, context, callback);
     } else {
-        event = JSON.parse(APIEvent.body) as AlexaRequestBody;
         callback = (error: any, result?: any) => {
             console.log("Alexa Response:\n" + JSON.stringify(error || result));
             return cb(error, result);
         };
-        await processAlexaEvent(event, context, callback);
+        await processAlexaEvent(APIEvent as AlexaRequestBody, context, callback);
     }
 };
 
@@ -82,7 +82,7 @@ async function processCortanaEvent(event: any, context: Context, callback: Callb
     try {
         let token = await getBotframeworkToken();
 
-        let request = JSON.parse(event["body"]) as BotFrameWorkRequestBody;
+        let request = JSON.parse(event["body"]) as BotFrameworkActivity;
 
         let text = request.text;
 
@@ -90,8 +90,25 @@ async function processCortanaEvent(event: any, context: Context, callback: Callb
             let nluResult = await query(text);
             console.log("NLU:\n%j", nluResult);
         }
+
+        let activity = {
+            "type": "message",
+            "from": request.recipient,
+            "conversation": request.conversation,
+            "locale": request.locale,
+            "recipient": request.from,
+            "text": text || "hello world",
+            "speak": text || "hello world",
+            "inputHint": "expectingInput",
+            "replyToId": request.id
+        } as BotFrameworkActivity;
+
+        let sendActivityResult = await sendActivity(activity, request.serviceUrl, request.conversation.id, request.id, token.access_token);
+
+        console.log("sent: %j", sendActivityResult);
+        callback(undefined, {});
     } catch (err) {
-        console.log("Error: %j %j", err, err.stack);
+        console.log("Error: %j", err);
         callback(new Error("Internal error processing Cortana event: " + err));
 
     }
