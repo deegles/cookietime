@@ -9,8 +9,10 @@
   "author": "Diego Benitez <diego@vokkal.co>",
   "license": "SEE LICENSE IN License.txt",
   "dependencies": {
+    "alexa-verifier": "^0.4.0",
     "bignumber.js": "^4.0.2",
     "lzutf8": "^0.4.6",
+    "request": "^2.81.0",
     "source-map-support": "^0.4.18"
   }
 }
