@@ -1,22 +1,103 @@
 "use strict";
+import * as verifier from "alexa-verifier";
 import {Callback, Context} from "aws-lambda";
 import "source-map-support/register";
 import * as util from "util";
-import {AlexaRequestBody, AlexaRequestType, AlexaResponseBody, IntentRequest} from "./definitions/AlexaService";
+import {
+    AlexaRequestBody, AlexaRequestType, AlexaResponseBody, IntentRequest
+} from "./definitions/AlexaService";
+import {BotFrameWorkRequestBody} from "./definitions/BotFrameworkService";
+import {RequestBody} from "./definitions/Common";
+import * as Frames from "./definitions/FrameDirectory";
 import {ResponseContext} from "./definitions/Handler";
 import {AlexaRequestContext, Attributes} from "./definitions/SkillContext";
-
-import * as Frames from "./definitions/FrameDirectory";
 import * as Views from "./definitions/ViewsDirectory";
 
 import {DAL} from "./resources/dal";
 
 import "./resources/imports";
+import {query} from "./resources/LUIS";
+import {getBotframeworkToken} from "./resources/MSATokenService";
 import {getIntent} from "./resources/utilities";
 
 let dal = new DAL("deeglescoSkillUserSessions");
 
-let handler = async function (event: AlexaRequestBody, context: Context, callback: Callback): Promise<void> {
+let handler = async function (APIEvent: any, context: Context, callback: Callback): Promise<void> {
+    if (APIEvent["source"] && APIEvent["source"] === "aws.events"
+        && APIEvent["detail-type"] && APIEvent["detail-type"] === "Scheduled Event") {
+        console.log("Warmup event...");
+        return callback(undefined, {});
+    }
+
+    let cb = callback;
+    let event;
+    if (APIEvent.resource) {
+        callback = (error: any, result?: any) => {
+            let response = {
+                "headers": {},
+                "statusCode": error ? 400 : 200,
+                "body": JSON.stringify(error || result)
+
+            };
+            console.log("API GW Response:\n%j", response);
+            return cb(undefined, response);
+        };
+
+        await routeAPIGatewayEvent(APIEvent, context, callback);
+    } else {
+        event = JSON.parse(APIEvent.body) as AlexaRequestBody;
+        callback = (error: any, result?: any) => {
+            console.log("Alexa Response:\n" + JSON.stringify(error || result));
+            return cb(error, result);
+        };
+        await processAlexaEvent(event, context, callback);
+    }
+};
+
+let routes: { [key: string]: (event: RequestBody, context: Context, callback: Callback) => Promise<void> } = {
+    "/cortana": processCortanaEvent
+};
+
+async function routeAPIGatewayEvent(APIEvent: any, context: Context, callback: Callback): Promise<void> {
+    let headers = APIEvent.headers;
+
+    try {
+        // TODO: check authorization header
+
+        let func = routes[APIEvent.resource];
+
+        if (func) {
+            await func(APIEvent, context, callback);
+        } else {
+            callback(new Error("No handler defined for resource: " + APIEvent.resource));
+        }
+
+    } catch (e) {
+        console.log("error routing: " + e);
+        callback(new Error("Internal error: " + e));
+    }
+}
+
+async function processCortanaEvent(event: any, context: Context, callback: Callback): Promise<void> {
+    try {
+        let token = await getBotframeworkToken();
+
+        let request = JSON.parse(event["body"]) as BotFrameWorkRequestBody;
+
+        let text = request.text;
+
+        if (text) {
+            let nluResult = await query(text);
+            console.log("NLU:\n%j", nluResult);
+        }
+    } catch (err) {
+        console.log("Error: %j %j", err, err.stack);
+        callback(new Error("Internal error processing Cortana event: " + err));
+
+    }
+}
+
+async function processAlexaEvent(event: AlexaRequestBody, context: Context, callback: Callback): Promise<void> {
 
     let customerId = event.context ? event.context.System.user.userId : event.session.user.userId;
     let sessionId = event.session.sessionId;
@@ -133,6 +214,6 @@ let handler = async function (event: AlexaRequestBody, context: Context, callbac
         console.log("Error: " + JSON.stringify(err));
         callback(err, undefined);
     }
-};
+}
 
 export default handler;
