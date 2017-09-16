@@ -1,18 +1,17 @@
 import * as Big from "bignumber.js";
 import {ActionMap, Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
+import {Inventory, Items, Oven} from "../definitions/Inventory";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 import {Humanize} from "../resources/humanize";
 
 import * as Frames from "../definitions/FrameDirectory";
 import {getPurchaseableItems} from "../resources/store";
 
-
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
     let model = new ResponseModel();
 
-    console.log("cookies: " + JSON.stringify(attr.CookieCounter));
-    let counter = new Big(attr.CookieCounter).add(1); // TODO: calculate based on inventory per batch and over time
+    let counter = new Big(attr.CookieCounter).add(getCookiesPerAction(attr.Inventory));
 
     model.speech = `Your cookie count is: ${Humanize(counter, 3)}. `;
     model.reprompt = model.speech;
@@ -71,3 +70,14 @@ let unhandled = () => {
 };
 
 new Frame("Cookie", entry, unhandled, actionMap);
+
+function getCookiesPerAction(inv: Inventory): Big.BigNumber {
+    let total = new Big(0);
+
+    inv.Ovens.forEach(ovenId => {
+        let oven = Items.All[ovenId] as Oven;
+        total = total.add(oven.capacity);
+    });
+
+    return total;
+}
