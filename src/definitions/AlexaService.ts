@@ -1,4 +1,4 @@
-import {ResponseBody} from "./Common";
+import {RequestBody, ResponseBody} from "./Common";
 
 /**
  * Alexa Skills Kit TypeScript definitions built from
@@ -6,8 +6,7 @@ import {ResponseBody} from "./Common";
  *
  * Date: 2016/04/01
  */
-export interface RequestBody {
-}
+
 
 export type AlexaRequestType = "LaunchRequest" | "IntentRequest" | "SessionEndedRequest";
 
