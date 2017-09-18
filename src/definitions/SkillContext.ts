@@ -1,9 +1,12 @@
-import {Callback, Context as LambdaContext} from "aws-lambda";
 import * as Big from "bignumber.js";
+import {query} from "../resources/LUIS";
 import {getIntent} from "../resources/utilities";
 import {AlexaRequestBody, IntentRequest, ResolutionStatus, SessionEndedRequest} from "./AlexaService";
+import {BotFrameworkActivity, Intent as BotIntent} from "./BotFrameworkService";
 import {ResponseModel} from "./Handler";
+import {Intents} from "./Intents";
 import {AssistantTypes, Inventory, KitchenTypes, OvenTypes} from "./Inventory";
+import {LUISServiceResponse} from "./LUISService";
 
 export interface RequestSlots {
     resolution?: {
@@ -26,7 +29,7 @@ export interface RequestContext {
 }
 
 export class AlexaRequestContext implements RequestContext {
-    constructor(request: AlexaRequestBody, event: LambdaContext, callback: Callback) {
+    constructor(request: AlexaRequestBody) {
 
         let intent = getIntent(request);
 
@@ -96,6 +99,69 @@ export class AlexaRequestContext implements RequestContext {
 
         return delete this[prop];
     }
+}
+
+export class CortanaRequestContext implements RequestContext {
+    constructor(activity: BotFrameworkActivity, nluResult?: LUISServiceResponse) {
+        this.newSession = false;
+        this.slots = {};
+        let intentName;
+
+        if (nluResult) {
+            intentName = Intents[nluResult.topScoringIntent.intent];
+
+            if (intentName) {
+                this.intent = intentName;
+            } else {
+                throw new Error("Unknown or unregistered intent: " + nluResult.topScoringIntent.intent);
+            }
+
+            // TODO: deal with multiple entities/values
+            let entity = nluResult.entities[0];
+
+            console.log("entity: " + JSON.stringify(entity));
+
+            if (entity) {
+                let value = entity.resolution.value;
+
+                if (entity.resolution.values) {
+                    let values = entity.resolution.values;
+                    value = values ? values[0] : undefined;
+                }
+
+                // Translate builtin type names to expected slot names
+                if (entity.type === "builtin.number" && intentName === "EatCookieIntent") {
+                    entity.type = "quantity";
+                }
+
+                this.slots[entity.type] = {
+                    resolution: {
+                        id: value,
+                        name: entity.type
+                    },
+                    value: value // TODO: check if entity.entity should be used instead
+                };
+
+            }
+        } else {
+            let intentObj = activity.entities.filter(entity => {
+                return entity.type = "Intent";
+            }).shift() as BotIntent;
+
+            intentName = Intents[intentObj.name];
+
+            if (intentName) {
+                this.intent = intentName;
+            } else {
+                throw new Error("Unknown or unregistered intent: " + intentObj.name);
+            }
+        }
+    }
+
+    intent: string;
+    slots: { [p: string]: RequestSlots };
+    newSession: boolean;
+
 }
 
 export class Attributes {
