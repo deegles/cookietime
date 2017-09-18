@@ -12,7 +12,9 @@ let requestCache: { [key: string]: LUISServiceResponse } = {}; // TODO: extend w
 export const query = function (query: string): Promise<LUISServiceResponse> {
     return new Promise((resolve, reject) => {
         try {
+            query = query.toLowerCase();
             if (query in requestCache) {
+                console.log("Found cached value...");
                 return resolve(requestCache[query]);
             }
 
@@ -30,6 +32,7 @@ export const query = function (query: string): Promise<LUISServiceResponse> {
             });
         } catch (e) {
             console.log("EXCEPTION " + e);
+            console.log("Query: " + query);
             reject(e);
         }
     });
