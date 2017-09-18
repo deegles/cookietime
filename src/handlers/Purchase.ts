@@ -80,6 +80,9 @@ let actionMap = {
     "EatCookieIntent": (attr: Attributes) => {
         return Frames["Eat"];
     },
+    "CookieIntent": (attr: Attributes) => {
+        return Frames["Cookie"];
+    }
 };
 
 let unhandled = () => {
