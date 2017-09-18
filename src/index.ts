@@ -10,7 +10,8 @@ import {BotFrameworkActivity} from "./definitions/BotFrameworkService";
 import {RequestBody} from "./definitions/Common";
 import * as Frames from "./definitions/FrameDirectory";
 import {ResponseContext} from "./definitions/Handler";
-import {AlexaRequestContext, Attributes} from "./definitions/SkillContext";
+import {LUISServiceResponse} from "./definitions/LUISService";
+import {AlexaRequestContext, Attributes, CortanaRequestContext} from "./definitions/SkillContext";
 import * as Views from "./definitions/ViewsDirectory";
 
 import {DAL} from "./resources/dal";
@@ -55,7 +56,7 @@ let handler = async function (APIEvent: any, context: Context, callback: Callbac
 };
 
 let routes: { [key: string]: (event: RequestBody, context: Context, callback: Callback) => Promise<void> } = {
-    "/cortana": processCortanaEvent
+    "/cortana": processBotFrameworkEvent
 };
 
 async function routeAPIGatewayEvent(APIEvent: any, context: Context, callback: Callback): Promise<void> {
@@ -78,39 +79,54 @@ async function routeAPIGatewayEvent(APIEvent: any, context: Context, callback: C
     }
 }
 
-async function processCortanaEvent(event: any, context: Context, callback: Callback): Promise<void> {
+async function processBotFrameworkEvent(event: any, context: Context, callback: Callback): Promise<void> {
     try {
         let token = await getBotframeworkToken();
 
         let request = JSON.parse(event["body"]) as BotFrameworkActivity;
+        let nluResult, sendActivityResult, responseActivity;
 
-        let text = request.text;
+        console.log("Activity:\n%j", request);
 
-        if (text) {
-            let nluResult = await query(text);
-            console.log("NLU:\n%j", nluResult);
+        if (request.type === "conversationUpdate") {
+            console.log("conversation update...");
+        } else if (request.type === "message") {
+            if (request.text) {
+                nluResult = await query(request.text) as LUISServiceResponse;
+                console.log("NLU:\n%j", nluResult);
+            }
+
+            let requestCtx = await new CortanaRequestContext(request, nluResult);
+            let attributes = new Attributes(await dal.get(request.from.id));
+
+            let frame = Frames[attributes.CurrentFrameId];
+
+            if (requestCtx.intent in frame.actions) {
+                frame = frame.actions[requestCtx.intent](attributes, requestCtx);
+            } else {
+                frame = frame.unhandled(attributes, requestCtx);
+            }
+
+            attributes.CurrentFrameId = frame.id;
+
+            let responseCtx: ResponseContext = frame.entry(attributes, requestCtx);
+
+            let view = Views["BotFrameworkActivity"];
+
+            responseActivity = view.render(responseCtx.model, request);
+
+            await dal.set(request.from.id, attributes);
+        } else {
+            console.log("Unknown request type: " + request.type);
         }
 
-        let activity = {
-            "type": "message",
-            "from": request.recipient,
-            "conversation": request.conversation,
-            "locale": request.locale,
-            "recipient": request.from,
-            "text": text || "hello world",
-            "speak": text || "hello world",
-            "inputHint": "expectingInput",
-            "replyToId": request.id
-        } as BotFrameworkActivity;
-
-        let sendActivityResult = await sendActivity(activity, request.serviceUrl, request.conversation.id, request.id, token.access_token);
-
+        sendActivityResult = await sendActivity(responseActivity, request.serviceUrl, request.conversation.id, request.id, token.access_token);
         console.log("sent: %j", sendActivityResult);
-        callback(undefined, {});
-    } catch (err) {
-        console.log("Error: %j", err);
-        callback(new Error("Internal error processing Cortana event: " + err));
 
+        callback();
+    } catch (err) {
+        console.log("Bot framework Error: " + err.stack);
+        callback(new Error("Internal error processing Bot Framework event: " + err));
     }
 }
 
@@ -180,7 +196,7 @@ async function processAlexaEvent(event: AlexaRequestBody, context: Context, call
     }
 
     try {
-        let ctx = new AlexaRequestContext(event, context, callback);
+        let ctx = new AlexaRequestContext(event);
 
         let attributes;
         if (event.session.new) {
