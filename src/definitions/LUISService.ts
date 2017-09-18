@@ -92,6 +92,7 @@ export interface LUISEntity  {
     startIndex: number;
     endIndex: number;
     resolution: {
-        values: Array<string>;
+        values?: Array<string>;
+        value?: string;
     };
 }
