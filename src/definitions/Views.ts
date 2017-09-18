@@ -1,4 +1,5 @@
 import * as ViewsDirectory from "../definitions/ViewsDirectory";
+import {BotFrameworkActivity} from "./BotFrameworkService";
 import {ResponseBody} from "./Common";
 import {ResponseModel} from "./Handler";
 
@@ -16,5 +17,5 @@ export class View {
 }
 
 export interface RendersResponse {
-    (model: ResponseModel): ResponseBody | Promise<ResponseBody>;
+    (model: ResponseModel, request?: BotFrameworkActivity): ResponseBody | Promise<ResponseBody>;
 }
