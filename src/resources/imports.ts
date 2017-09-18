@@ -12,3 +12,4 @@ import "../handlers/Repeat";
 import "../handlers/Start";
 import "../handlers/Store";
 import "../views/AlexaStandard";
+import "../views/BotFrameworkActivity";
