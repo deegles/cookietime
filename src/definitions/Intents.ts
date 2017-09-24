@@ -25,7 +25,12 @@ export type AlexaIntents =
     | "SessionEndedRequest"
     | "PurchaseUpgradeIntent";
 
-export type CortanaIntents = "Microsoft.Launch" | "None";
+export type CortanaIntents =
+    "Microsoft.Launch"
+    | "Utilities.Confirm"
+    | "Utilities.Cancel"
+    | "Places.StartOver"
+    | "None";
 
 export type SkillIntents =
     "CancelIntent"
@@ -84,5 +89,8 @@ export const Intents: {[Key in AllIntentNames]: SkillIntents } = {
     "SessionEndedRequest": "SessionEndedRequest",
     "PurchaseUpgradeIntent": "PurchaseUpgradeIntent",
     "Microsoft.Launch": "LaunchRequest",
-    "None": "None"
+    "None": "None",
+    "Utilities.Confirm": "YesIntent",
+    "Utilities.Cancel": "CancelIntent",
+    "Places.StartOver": "StartOverIntent"
 };
