@@ -14,11 +14,9 @@ export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<
 
         let item = Items.All[allItems[itemIndex]] as Purchaseable;
 
-        let owned = [].concat(inv.Ovens, inv.Assistants).filter(invItem => {
-            return Items.All[invItem].type === item.type; // TODO: refactor into helper function
-        });
+        let cost = calculateCost(item, inv);
 
-        let cost = calculateCost(item, owned.length);
+        console.log("Cost of " + item.id + ": " + cost);
 
         if (cost.lessThanOrEqualTo(num) && canUpgrade(inv, item)) {
             available.push(item.id);
@@ -28,8 +26,46 @@ export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<
     return available;
 }
 
-export function calculateCost(item: Purchaseable, owned: number): big.BigNumber {
-    let cost = new big(item.baseCost).times(new big(item.multiplier).pow(owned));
+export function getNextUpgradeCost(inv: Inventory): big.BigNumber {
+    let cost = new big(-1);
+    let available: Array<big.BigNumber> = [];
+    let allItems: Array<ItemTypes> = Object.keys(Items.All) as Array<ItemTypes>;
+
+    for (let i = 0; i < 25; i++) {
+        let target = new big(10).pow(i);
+
+        for (let itemIndex = 0; itemIndex < allItems.length; itemIndex++) {
+
+            let item = Items.All[allItems[itemIndex]] as Purchaseable;
+
+            let cost = calculateCost(item, inv);
+
+            if (cost.lessThanOrEqualTo(target) && canUpgrade(inv, item)) {
+                available.push(cost);
+            }
+        }
+
+        if (available.length > 0) {
+            break;
+        }
+    }
+
+    available.sort(byBigNumber);
+    console.log("available: " + JSON.stringify(available));
+
+    return available.pop() || cost;
+}
+
+export function calculateCost(item: Purchaseable, inv: Inventory): big.BigNumber {
+    let itemsInInventory = [].concat(inv.Ovens, inv.Kitchen, inv.Assistants).filter(i => {
+        return Items.All[i].type === item.type;
+    });
+
+    let rankSum = itemsInInventory.reduce((prev, curr) => {
+        return prev + Items.All[curr].rank;
+    }, 0);
+
+    let cost = new big(item.baseCost).times(new big(item.multiplier).pow(itemsInInventory.length + rankSum));
     return cost.floor();
 }
 
@@ -50,4 +86,14 @@ export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
     });
 
     return slotsAvailable || upgradeable;
+}
+
+function byBigNumber(a: big.BigNumber, b: big.BigNumber): number {
+    if (a.greaterThan(b)) {
+        return -1;
+    } else if (a.lessThan(b)) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
