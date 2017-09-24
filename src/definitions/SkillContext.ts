@@ -169,6 +169,7 @@ export class Attributes {
         this.FrameStack = [];
         this.CookieCounter = new Big("0");
         this.CookiesEaten = new Big("0");
+        this.NextUpgrade = new Big("-1");
         this.CurrentFrameId = "Start";
         this.Upgrades = [];
         this.Inventory = {
@@ -204,6 +205,8 @@ export class Attributes {
     Inventory: Inventory;
 
     Upgrades: Array<KitchenTypes | AssistantTypes | OvenTypes>;
+
+    NextUpgrade: Big.BigNumber;
 
     get(prop: string): any {
         console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);
