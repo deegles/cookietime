@@ -38,6 +38,9 @@ let actionMap = {
     "PurchaseUpgradeIntent": (attr: Attributes) => {
         return Frames["Purchase"];
     },
+    "CheckUpgradesIntent": (attr: Attributes) => {
+        return Frames["Store"];
+    },
     "SessionEndedRequest": (attr: Attributes) => {
         console.log("Session ended in start!");
         attr.CurrentFrameId = "Start";
