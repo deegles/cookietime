@@ -29,7 +29,7 @@ export function getBotframeworkToken(): Promise<Token> {
                     if (response.statusCode === 200) {
                         let token = JSON.parse(body) as Token;
                         let now = new Date();
-                        token["expires_on"] = now.getTime() + token.expires_in * 1000;
+                        token["expires_on"] = now.getTime() + (token.expires_in * 1000);
                         cachedToken = token as CachedToken;
                         resolve(cachedToken);
                     } else {
@@ -47,9 +47,7 @@ export function getBotframeworkToken(): Promise<Token> {
 }
 
 function tokenIsExpired(): boolean {
-    let now = new Date();
-
-    return !cachedToken || now.getTime() > (cachedToken.expires_on - 5 * 1000);
+    return !cachedToken || (new Date()).getTime() > (cachedToken.expires_on - (5 * 1000));
 }
 
 
