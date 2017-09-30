@@ -30,6 +30,7 @@ export interface Assistant extends Purchaseable {
 }
 
 export type ItemCategories = "Oven" | "Assistant" | "Kitchen";
+
 export type OvenTypes =
     "EasyBake"
     | "Fancy"
@@ -39,8 +40,19 @@ export type OvenTypes =
     | "Industrial"
     | "Continuous"
     | "UpgradedContinuous";
+
 export type AssistantTypes = "PartTime";
-export type KitchenTypes = "Hobby";
+
+export type KitchenTypes =
+    "Tiny"
+    | "Hobby"
+    | "Enthusiast"
+    | "Entrepreneur"
+    | "Business"
+    | "City"
+    | "Regional"
+    | "National";
+
 export type ItemTypes = OvenTypes | AssistantTypes | KitchenTypes;
 
 export class Items {
@@ -142,14 +154,85 @@ export class Items {
         /**
          * Kitchens
          */
-        Hobby: {
+        Tiny: {
             OvenLimit: 2,
             AssistantLimit: 0,
             baseCost: new Big(0),
             multiplier: 0,
             type: "Kitchen",
-            id: "Hobby",
+            id: "Tiny",
+            description: "a tiny kitchen",
             rank: 1
         } as Kitchen,
+        Hobby: {
+            OvenLimit: 3,
+            AssistantLimit: 0,
+            baseCost: new Big(35),
+            multiplier: 1.1,
+            type: "Kitchen",
+            id: "Hobby",
+            description: "a hobby kitchen",
+            rank: 2
+        } as Kitchen,
+        Enthusiast: {
+            OvenLimit: 4,
+            AssistantLimit: 0,
+            baseCost: new Big(150),
+            multiplier: 1.1,
+            type: "Kitchen",
+            id: "Enthusiast",
+            description: "an enthusiast kitchen",
+            rank: 3
+        } as Kitchen,
+        Entrepreneur: {
+            OvenLimit: 6,
+            AssistantLimit: 0,
+            baseCost: new Big(350),
+            multiplier: 1.1,
+            type: "Kitchen",
+            id: "Entrepreneur",
+            description: "an entrepreneur kitchen",
+            rank: 4
+        } as Kitchen,
+        Business: {
+            OvenLimit: 9,
+            AssistantLimit: 0,
+            baseCost: new Big(1000),
+            multiplier: 1.1,
+            type: "Kitchen",
+            id: "Business",
+            description: "a Business kitchen",
+            rank: 5
+        } as Kitchen,
+        City: {
+            OvenLimit: 18,
+            AssistantLimit: 0,
+            baseCost: new Big(3000),
+            multiplier: 1.1,
+            type: "Kitchen",
+            id: "City",
+            description: "a city kitchen",
+            rank: 6
+        } as Kitchen,
+        Regional: {
+            OvenLimit: 40,
+            AssistantLimit: 0,
+            baseCost: new Big(10000),
+            multiplier: 1.1,
+            type: "Kitchen",
+            id: "Regional",
+            description: "a regional kitchen",
+            rank: 7
+        } as Kitchen,
+        National: {
+            OvenLimit: 100,
+            AssistantLimit: 0,
+            baseCost: new Big(50000),
+            multiplier: 1.1,
+            type: "Kitchen",
+            id: "National",
+            description: "a national kitchen",
+            rank: 8
+        } as Kitchen
     };
 }
