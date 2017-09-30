@@ -39,6 +39,9 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
         model.reprompt = `You have ${Humanize(attr.CookieCounter, 3)} cookies left.`;
     }
 
+    model.cookieCount = attr.CookieCounter;
+    model.upgrades = attr.Upgrades;
+
     attr.Model = model;
 
     return new ResponseContext(model);

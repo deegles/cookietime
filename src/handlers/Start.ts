@@ -10,6 +10,8 @@ let entry = (attr: Attributes, ctx: AlexaRequestContext) => {
     model.speech = "It's cookie time. Do you want to cook?";
     model.reprompt = "hello again";
 
+    model.cookieCount = attr.CookieCounter;
+
     attr.Model = model;
 
     return new ResponseContext(model);

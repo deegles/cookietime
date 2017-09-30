@@ -25,6 +25,9 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
         model.reprompt = "Say 'get upgrades' to hear what is available. ";
     }
 
+    model.cookieCount = attr.CookieCounter;
+    model.upgrades = attr.Upgrades;
+
     attr.Model = model;
 
     return new ResponseContext(model);

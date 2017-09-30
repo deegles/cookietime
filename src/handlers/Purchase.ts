@@ -95,6 +95,10 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
     model.reprompt = "What else would you like to purchase?";
 
+    model.cookieCount = attr.CookieCounter;
+    model.upgrades = attr.Upgrades;
+
+    attr.Model = model;
     return new ResponseContext(model);
 };
 
@@ -110,7 +114,10 @@ let actionMap = {
     },
     "CookieIntent": (attr: Attributes) => {
         return Frames["Cookie"];
-    }
+    },
+    "CheckUpgradesIntent": (attr: Attributes) => {
+        return Frames["Store"];
+    },
 };
 
 let unhandled = () => {
