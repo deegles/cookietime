@@ -88,7 +88,7 @@ export class DAL {
                         let obj = {};
 
                         if (data && data.Item && data.Item["cData"] && data.Item["cData"]["data"]) {
-                            obj = JSON.parse(LZUTF8.decompress(data.Item["cData"]["data"]));
+                            obj = JSON.parse(LZUTF8["decompress"](data.Item["cData"]["data"]));
                         } else if (data && data.Item && data.Item["mapAttr"]) {
                             obj = data.Item["mapAttr"];
                         }
@@ -107,7 +107,7 @@ export class DAL {
                     return reject(new Error("DynamoDB Table name is not set."));
                 }
 
-                let compressed = LZUTF8.compress(JSON.stringify(data));
+                let compressed = LZUTF8["compress"](JSON.stringify(data));
                 let params = {
                     Item: {
                         userId: userId,
