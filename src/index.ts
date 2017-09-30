@@ -116,12 +116,14 @@ async function processBotFrameworkEvent(event: any, context: Context, callback: 
             responseActivity = view.render(responseCtx.model, request);
 
             await dal.set(request.from.id, attributes);
+
+            console.log("Response:\n%j" + JSON.stringify(responseActivity));
+
+            sendActivityResult = await sendActivity(responseActivity, request.serviceUrl, request.conversation.id, request.id, token.access_token);
+            console.log("sent: %j", sendActivityResult);
         } else {
             console.log("Unknown request type: " + request.type);
         }
-
-        sendActivityResult = await sendActivity(responseActivity, request.serviceUrl, request.conversation.id, request.id, token.access_token);
-        console.log("sent: %j", sendActivityResult);
 
         callback();
     } catch (err) {
