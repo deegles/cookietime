@@ -173,7 +173,7 @@ export class Attributes {
         this.CurrentFrameId = "Start";
         this.Upgrades = [];
         this.Inventory = {
-            Kitchen: "Hobby",
+            Kitchen: "Tiny",
             Ovens: ["EasyBake"],
             Assistants: []
         };
