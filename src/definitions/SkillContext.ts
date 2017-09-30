@@ -175,7 +175,8 @@ export class Attributes {
         this.Inventory = {
             Kitchen: "Tiny",
             Ovens: ["EasyBake"],
-            Assistants: []
+            Assistants: [],
+            LastActionTime: new Date().getTime()
         };
 
         if (props) {

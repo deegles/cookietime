@@ -4,6 +4,7 @@ export interface Inventory {
     Kitchen: KitchenTypes;
     Ovens: Array<OvenTypes>;
     Assistants: Array<AssistantTypes>;
+    LastActionTime: number;
 }
 
 export interface Purchaseable {
