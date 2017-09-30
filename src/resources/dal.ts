@@ -10,7 +10,7 @@ let newTableParams = {
     AttributeDefinitions: [
         {
             AttributeName: "userId",
-            AttributeType: "S"
+            AttributeType: "B"
         }
     ],
     KeySchema: [
@@ -48,7 +48,7 @@ export class DAL {
 
             let params = {
                 Key: {
-                    userId: userId
+                    userId: LZUTF8["compress"](userId)
                 },
                 TableName: this.table,
                 ConsistentRead: true
@@ -110,7 +110,7 @@ export class DAL {
                 let compressed = LZUTF8["compress"](JSON.stringify(data));
                 let params = {
                     Item: {
-                        userId: userId,
+                        userId: LZUTF8["compress"](userId),
                         cData: {data: compressed}
                     },
                     TableName: this.table
