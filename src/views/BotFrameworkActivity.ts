@@ -53,7 +53,7 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
                     text: "Upgrade",
                     title: "Buy: " + (item.id + " " + item.type).toLowerCase(),
                     type: "postBack",
-                    value: item.description,
+                    value: "buy " + item.description,
                 }
             );
         });
