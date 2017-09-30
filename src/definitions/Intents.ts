@@ -35,6 +35,8 @@ export type CortanaIntents =
     | "Utilities.Repeat"
     | "Utilities.ShowPrevious"
     | "Utilities.Stop"
+    | "Microsoft.YesIntent"
+    | "Microsoft.NoIntent"
     | "None";
 
 export type SkillIntents =
@@ -102,5 +104,7 @@ export const Intents: {[Key in AllIntentNames]: SkillIntents } = {
     "Utilities.Help": "HelpIntent",
     "Utilities.Repeat": "RepeatIntent",
     "Utilities.ShowPrevious": "PreviousIntent",
-    "Utilities.Stop": "StopIntent"
+    "Utilities.Stop": "StopIntent",
+    "Microsoft.YesIntent": "YesIntent",
+    "Microsoft.NoIntent": "NoIntent"
 };
