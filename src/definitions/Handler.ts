@@ -1,4 +1,6 @@
+import * as Big from "bignumber.js";
 import * as Frames from "../definitions/FrameDirectory";
+import {ItemTypes} from "./Inventory";
 import {Attributes, RequestContext} from "./SkillContext";
 
 export class Frame {
@@ -29,8 +31,15 @@ export class ResponseContext {
 }
 
 export class ResponseModel {
+    constructor() {
+        this.cookieCount = new Big(0);
+        this.upgrades = [];
+    }
+
     speech: string;
     reprompt?: string;
+    cookieCount: Big.BigNumber;
+    upgrades: Array<ItemTypes>;
 }
 
 export interface ReturnsResponseContext {
