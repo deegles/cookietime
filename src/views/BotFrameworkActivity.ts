@@ -51,7 +51,7 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
             card.buttons.push(
                 {
                     text: "Upgrade",
-                    title: "Buy: " + item.id,
+                    title: "Buy: " + (item.id + " " + item.type).toLowerCase(),
                     type: "postBack",
                     value: item.description,
                 }
@@ -81,8 +81,14 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
         attachments: [Attachment],
     } as BotFrameworkActivity;
 
-    if (activity.channelId === "webchat" && model.upgrades.length < 1) {
-        response.text = model.speech;
+    if (activity.channelId === "webchat") {
+
+        // Reverse so that cookies button stays in place for clicking
+        card.buttons.reverse();
+
+        if (model.upgrades.length < 1) {
+            response.text = model.speech;
+        }
     }
 
     return response;
