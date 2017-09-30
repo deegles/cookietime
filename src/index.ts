@@ -22,7 +22,7 @@ import {query} from "./resources/LUIS";
 import {getBotframeworkToken} from "./resources/MSATokenService";
 import {getIntent} from "./resources/utilities";
 
-let dal = new DAL("deeglescoSkillUserSessions");
+let dal = new DAL("cookieTimeUserSessions");
 
 let handler = async function (APIEvent: any, context: Context, callback: Callback): Promise<void> {
     if (APIEvent["source"] && APIEvent["source"] === "aws.events"
