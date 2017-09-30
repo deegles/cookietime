@@ -41,7 +41,7 @@ export type OvenTypes =
     | "Continuous"
     | "UpgradedContinuous";
 
-export type AssistantTypes = "PartTime";
+export type AssistantTypes = "Junior" | "PartTime" | "FullTime" | "Chef" | "Robotic" | "Android";
 
 export type KitchenTypes =
     "Tiny"
@@ -143,13 +143,59 @@ export class Items {
         /**
          * Assistants
          */
-        PartTime: {
+        Junior: {
             baseCost: new Big(100),
             multiplier: 1.07,
             type: "Assistant",
             rank: 1,
             duration: 1,
+            description: "a junior assistant",
+            id: "Junior"
+        } as Assistant,
+        PartTime: {
+            baseCost: new Big(300),
+            multiplier: 1.2,
+            type: "Assistant",
+            rank: 2,
+            duration: 4,
+            description: "a part time assistant",
             id: "PartTime"
+        } as Assistant,
+        FullTime: {
+            baseCost: new Big(600),
+            multiplier: 1.2,
+            type: "Assistant",
+            rank: 3,
+            duration: 8,
+            description: "a full time assistant",
+            id: "FullTime"
+        } as Assistant,
+        Chef: {
+            baseCost: new Big(1500),
+            multiplier: 1.2,
+            type: "Assistant",
+            rank: 4,
+            duration: 12,
+            description: "a chef assistant",
+            id: "Chef"
+        } as Assistant,
+        Robotic: {
+            baseCost: new Big(2500),
+            multiplier: 1.2,
+            type: "Assistant",
+            rank: 5,
+            duration: 18,
+            description: "a robot assistant",
+            id: "Robotic"
+        } as Assistant,
+        Android: {
+            baseCost: new Big(6000),
+            multiplier: 1.5,
+            type: "Assistant",
+            rank: 6,
+            duration: 24,
+            description: "an android assistant",
+            id: "Android"
         } as Assistant,
         /**
          * Kitchens
@@ -166,7 +212,7 @@ export class Items {
         } as Kitchen,
         Hobby: {
             OvenLimit: 3,
-            AssistantLimit: 0,
+            AssistantLimit: 1,
             baseCost: new Big(35),
             multiplier: 1.1,
             type: "Kitchen",
@@ -176,7 +222,7 @@ export class Items {
         } as Kitchen,
         Enthusiast: {
             OvenLimit: 4,
-            AssistantLimit: 0,
+            AssistantLimit: 2,
             baseCost: new Big(150),
             multiplier: 1.1,
             type: "Kitchen",
@@ -186,7 +232,7 @@ export class Items {
         } as Kitchen,
         Entrepreneur: {
             OvenLimit: 6,
-            AssistantLimit: 0,
+            AssistantLimit: 4,
             baseCost: new Big(350),
             multiplier: 1.1,
             type: "Kitchen",
@@ -196,7 +242,7 @@ export class Items {
         } as Kitchen,
         Business: {
             OvenLimit: 9,
-            AssistantLimit: 0,
+            AssistantLimit: 9,
             baseCost: new Big(1000),
             multiplier: 1.1,
             type: "Kitchen",
@@ -206,7 +252,7 @@ export class Items {
         } as Kitchen,
         City: {
             OvenLimit: 18,
-            AssistantLimit: 0,
+            AssistantLimit: 18,
             baseCost: new Big(3000),
             multiplier: 1.1,
             type: "Kitchen",
@@ -216,7 +262,7 @@ export class Items {
         } as Kitchen,
         Regional: {
             OvenLimit: 40,
-            AssistantLimit: 0,
+            AssistantLimit: 40,
             baseCost: new Big(10000),
             multiplier: 1.1,
             type: "Kitchen",
@@ -226,7 +272,7 @@ export class Items {
         } as Kitchen,
         National: {
             OvenLimit: 100,
-            AssistantLimit: 0,
+            AssistantLimit: 100,
             baseCost: new Big(50000),
             multiplier: 1.1,
             type: "Kitchen",
