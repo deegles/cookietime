@@ -7,7 +7,7 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
 
     let CookieAction = {
         text: "Cookie",
-        title: "Cookie Time",
+        title: "Cookies!",
         type: "postBack",
         value: "bake more cookies",
     };
@@ -48,8 +48,6 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
 
         model.upgrades.forEach(upgrade => {
             let item: Purchaseable = Items.All[upgrade];
-            console.log("upgrade: " + upgrade);
-            console.log("item:" + JSON.stringify(item));
             card.buttons.push(
                 {
                     text: "Upgrade",
