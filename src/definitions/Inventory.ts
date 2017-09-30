@@ -12,6 +12,7 @@ export interface Purchaseable {
     type: ItemCategories;
     rank: number;
     id: ItemTypes;
+    description: string;
 }
 
 export interface Kitchen extends Purchaseable {
@@ -54,6 +55,7 @@ export class Items {
             capacity: 1,
             type: "Oven",
             id: "EasyBake",
+            description: "an easy bake oven",
             rank: 1
         } as Oven,
         Toaster: {
@@ -63,6 +65,7 @@ export class Items {
             capacity: 2,
             type: "Oven",
             id: "Toaster",
+            description: "a toaster oven",
             rank: 2
         } as Oven,
         HomeOven: {
@@ -72,6 +75,7 @@ export class Items {
             capacity: 4,
             type: "Oven",
             id: "HomeOven",
+            description: "a home oven",
             rank: 3
         } as Oven,
         Fancy: {
@@ -81,6 +85,7 @@ export class Items {
             capacity: 8,
             type: "Oven",
             id: "Fancy",
+            description: "a fancy oven",
             rank: 4
         } as Oven,
         Professional: {
@@ -90,6 +95,7 @@ export class Items {
             capacity: 16,
             type: "Oven",
             id: "Professional",
+            description: "a professional oven",
             rank: 5
         } as Oven,
         Industrial: {
@@ -99,6 +105,7 @@ export class Items {
             capacity: 32,
             type: "Oven",
             id: "Industrial",
+            description: "an industrial oven",
             rank: 6
         } as Oven,
         Continuous: {
@@ -108,6 +115,7 @@ export class Items {
             capacity: 64,
             type: "Oven",
             id: "Continuous",
+            description: "a continuous oven",
             rank: 7
         } as Oven,
         UpgradedContinuous: {
@@ -117,6 +125,7 @@ export class Items {
             capacity: 128,
             type: "Oven",
             id: "UpgradedContinuous",
+            description: "an upgraded continuous oven",
             rank: 8
         } as Oven,
         /**
