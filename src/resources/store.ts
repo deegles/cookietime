@@ -4,7 +4,7 @@ import {
     Purchaseable
 } from "../definitions/Inventory";
 
-export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<ItemTypes> {
+export function getPurchaseableItems(cookies: big.BigNumber, inv: Inventory): Array<ItemTypes> {
 
     let oven, kitchen, assistant;
 
@@ -16,9 +16,7 @@ export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<
 
         let cost = calculateCost(item, inv);
 
-        console.log("Cost of " + item.id + ": " + cost);
-
-        if (cost.lessThanOrEqualTo(num) && canUpgrade(inv, item)) {
+        if (cost.lessThanOrEqualTo(cookies) && canUpgrade(inv, item)) {
             if (item.type === "Oven") {
                 oven = item.id;
             } else if (item.type === "Kitchen") {
@@ -82,9 +80,7 @@ export function calculateCost(item: Purchaseable, inv: Inventory): big.BigNumber
 }
 
 export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
-    let inventoryItems: Array<ItemTypes> = [].concat(inv.Ovens, inv.Assistants);
-
-    inventoryItems.push(inv.Kitchen);
+    let inventoryItems: Array<ItemTypes> = [].concat(inv.Ovens, inv.Kitchen, inv.Assistants);
 
     let slotsAvailable: boolean = false;
 
