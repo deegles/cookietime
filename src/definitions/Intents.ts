@@ -30,6 +30,11 @@ export type CortanaIntents =
     | "Utilities.Confirm"
     | "Utilities.Cancel"
     | "Places.StartOver"
+    | "Utilities.GoBack"
+    | "Utilities.Help"
+    | "Utilities.Repeat"
+    | "Utilities.ShowPrevious"
+    | "Utilities.Stop"
     | "None";
 
 export type SkillIntents =
@@ -92,5 +97,10 @@ export const Intents: {[Key in AllIntentNames]: SkillIntents } = {
     "None": "None",
     "Utilities.Confirm": "YesIntent",
     "Utilities.Cancel": "CancelIntent",
-    "Places.StartOver": "StartOverIntent"
+    "Places.StartOver": "StartOverIntent",
+    "Utilities.GoBack": "PreviousIntent",
+    "Utilities.Help": "HelpIntent",
+    "Utilities.Repeat": "RepeatIntent",
+    "Utilities.ShowPrevious": "PreviousIntent",
+    "Utilities.Stop": "StopIntent"
 };
