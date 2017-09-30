@@ -1,4 +1,3 @@
-import * as Big from "bignumber.js";
 import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
@@ -12,6 +11,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
     let ovens = ctx.slots["OVENS"];
     let kitchens = ctx.slots["KITCHENS"];
+    let assistants = ctx.slots["ASSISTANT"];
 
     console.log("Context: " + JSON.stringify(ctx));
     console.log("Inventory: " + JSON.stringify(attr.Inventory));
@@ -32,10 +32,16 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
             unresolvedItem = true;
             console.log("Invalid KITCHENS value: " + ovens.resolution.name);
         }
+    } else if (assistants && assistants.resolution) {
+        if (assistants.resolution.id) {
+            itemId = assistants.resolution.id; // TODO: fetch full name
+        } else {
+            unresolvedItem = true;
+            console.log("Invalid ASSISTANT value: " + ovens.resolution.name);
+        }
     }
 
     if (itemId) {
-        let allItems: Array<ItemTypes> = [].concat(attr.Inventory.Ovens, attr.Inventory.Kitchen, attr.Inventory.Assistants);
         let candidate = Items.All[itemId];
 
         function byRank(a: ItemTypes, b: ItemTypes) {
@@ -50,8 +56,6 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
         let ovensBelowItemRank = attr.Inventory.Ovens.some(invItem => {
             let t = Items.All[invItem];
-            console.log("Item: " + candidate.id + " : " + candidate.rank);
-            console.log("inv: " + t.id + " : " + t.rank);
             return t.type === candidate.type && t.rank < candidate.rank;
         });
 
@@ -87,6 +91,16 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
             attr.CookieCounter = attr.CookieCounter.minus(cost);
             attr.Upgrades = getPurchaseableItems(attr.CookieCounter, attr.Inventory);
             model.speech = "You now have " + attr.Inventory.Ovens.join(", ");
+        } else if (candidate.type === "Assistant") {
+
+            attr.Inventory.Assistants.push(itemId);
+            attr.Inventory.Assistants.sort(byRank);
+
+            attr.Inventory.Assistants = attr.Inventory.Assistants.slice(0, kitchen.AssistantLimit);
+
+            attr.CookieCounter = attr.CookieCounter.minus(cost);
+            attr.Upgrades = getPurchaseableItems(attr.CookieCounter, attr.Inventory);
+            model.speech = "You now have " + attr.Inventory.Assistants.join(", ");
         }
 
     } else {
