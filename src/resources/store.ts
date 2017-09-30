@@ -6,7 +6,7 @@ import {
 
 export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<ItemTypes> {
 
-    let available: Array<ItemTypes> = [];
+    let oven, kitchen, assistant;
 
     let allItems: Array<ItemTypes> = Object.keys(Items.All) as Array<ItemTypes>;
 
@@ -19,11 +19,23 @@ export function getPurchaseableItems(num: big.BigNumber, inv: Inventory): Array<
         console.log("Cost of " + item.id + ": " + cost);
 
         if (cost.lessThanOrEqualTo(num) && canUpgrade(inv, item)) {
-            available.push(item.id);
+            if (item.type === "Oven") {
+                oven = item.id;
+            } else if (item.type === "Kitchen") {
+                kitchen = item.id;
+            } else {
+                assistant = item.id;
+            }
         }
     }
 
-    return available;
+    let upgrades = [];
+
+    oven ? upgrades.push(oven) : undefined;
+    kitchen ? upgrades.push(kitchen) : undefined;
+    assistant ? upgrades.push(assistant) : undefined;
+
+    return upgrades;
 }
 
 export function getNextUpgradeCost(inv: Inventory): big.BigNumber {
@@ -70,7 +82,9 @@ export function calculateCost(item: Purchaseable, inv: Inventory): big.BigNumber
 }
 
 export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
-    let allItems: Array<ItemTypes> = [].concat(inv.Ovens, inv.Kitchen, inv.Assistants);
+    let inventoryItems: Array<ItemTypes> = [].concat(inv.Ovens, inv.Assistants);
+
+    inventoryItems.push(inv.Kitchen);
 
     let slotsAvailable: boolean = false;
 
@@ -80,10 +94,11 @@ export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
         slotsAvailable = inv.Assistants.length < (Items.All[inv.Kitchen] as Kitchen).AssistantLimit;
     }
 
-    let upgradeable: boolean = allItems.some(itemId => {
+    let upgradeable: boolean = inventoryItems.some(itemId => {
         let invItem = Items.All[itemId] as Purchaseable;
         return invItem.type === item.type && invItem.rank < item.rank;
     });
+
 
     return slotsAvailable || upgradeable;
 }
