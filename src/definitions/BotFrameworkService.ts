@@ -52,7 +52,7 @@ export const BotFrameworkActivityType = {
     message: "message" as BotFrameworkActivityType
 };
 
-export type BotFrameworkChannelType = "cortana";
+export type BotFrameworkChannelType = "cortana" | "webchat";
 
 export const BotFrameworkChannelType = {
     cortana: "cortana" as BotFrameworkChannelType
@@ -71,9 +71,27 @@ export const BotFrameworkEntity = {
     "DeviceInfo": "DeviceInfo" as BotFrameworkEntity
 };
 
+export type BotFrameworkAttachmentType =
+    "application/vnd.microsoft.card.adaptive"
+    | "application/vnd.microsoft.card.animation"
+    | "application/vnd.microsoft.card.audio"
+    | "application/vnd.microsoft.card.video"
+    | "application/vnd.microsoft.card.hero"
+    | "application/vnd.microsoft.card.thumbnail"
+    | "application/vnd.microsoft.com.card.receipt"
+    | "application/vnd.microsoft.com.card.signin";
+
+export interface BotFrameworkAttachment {
+    contentType: BotFrameworkAttachmentType;
+    contentUrl: string;
+    content: any;
+    name: string;
+    thumbnailUrl: string;
+}
+
 export interface BotFrameworkActivity extends RequestBody {
     action: string;
-    attachments: Array<string>; // TODO: attachment object
+    attachments: Array<BotFrameworkAttachment>;
     attachmentLayout: string;
     channelData: ChannelData;
     channelId: BotFrameworkChannelType;
