@@ -103,13 +103,13 @@ function getAssistantBakedCookies(inv: Inventory): Big.BigNumber {
     console.log("Assistants: " + assistants );
     let now = new Date().getTime();
 
-    while (assistants.length > 0 && ovens.length > 0) {
+    while (assistants.length > 0 && ovens.length > 0 && assistants.length <= ovens.length) {
         let assistant = Items.All[assistants.pop()] as Assistant;
         let oven = Items.All[ovens.pop()] as Oven;
 
-        let hours = Math.floor((now - inv.LastActionTime) / (1000 * 60 * 60));
+        let hours = new Big(now - inv.LastActionTime).div(1000 * 60 * 60);
 
-        total = total.add(Big.min(assistant.duration, hours).times(oven.hourlyRate));
+        total = total.add((Big.min(assistant.duration, hours).times(oven.hourlyRate)).trunc());
     }
 
     console.log("Assistants baked %s cookies.", total);
