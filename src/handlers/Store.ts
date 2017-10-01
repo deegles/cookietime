@@ -11,9 +11,9 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     let model = new ResponseModel();
     attr.NextUpgrade = getNextUpgradeCost(attr.Inventory);
 
-    if (attr.Upgrades.length > 0) {
-        model.speech = "You can purchase: " + attr.Upgrades.map(itemId => {
-                let item = Items.All[itemId];
+    if (Object.keys(attr.Upgrades).length > 0) {
+        model.speech = "You can purchase: " + Object.keys(attr.Upgrades).map(upgrade => {
+                let item = attr.Upgrades[upgrade].item;
 
                 return item.id;
             }).join(", ") + ". What would you like to purchase?";

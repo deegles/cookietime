@@ -4,9 +4,20 @@ import {
     Purchaseable
 } from "../definitions/Inventory";
 
-export function getPurchaseableItems(cookies: big.BigNumber, inv: Inventory): Array<ItemTypes> {
+export interface ItemForPurchase {
+    item: Purchaseable;
+    cost: big.BigNumber;
+}
 
-    let oven, kitchen, assistant;
+export class AvailableItemsForPurchase {
+    oven: ItemForPurchase;
+    kitchen: ItemForPurchase;
+    assistant: ItemForPurchase;
+}
+
+export function getPurchaseableItems(cookies: big.BigNumber, inv: Inventory): AvailableItemsForPurchase {
+
+    let available = new AvailableItemsForPurchase();
 
     let allItems: Array<ItemTypes> = Object.keys(Items.All) as Array<ItemTypes>;
 
@@ -18,22 +29,25 @@ export function getPurchaseableItems(cookies: big.BigNumber, inv: Inventory): Ar
 
         if (cost.lessThanOrEqualTo(cookies) && canUpgrade(inv, item)) {
             if (item.type === "Oven") {
-                oven = item.id;
+                available.oven = {
+                    item: item,
+                    cost: cost
+                };
             } else if (item.type === "Kitchen") {
-                kitchen = item.id;
+                available.kitchen = {
+                    item: item,
+                    cost: cost
+                };
             } else {
-                assistant = item.id;
+                available.assistant = {
+                    item: item,
+                    cost: cost
+                };
             }
         }
     }
 
-    let upgrades = [];
-
-    oven ? upgrades.push(oven) : undefined;
-    kitchen ? upgrades.push(kitchen) : undefined;
-    assistant ? upgrades.push(assistant) : undefined;
-
-    return upgrades;
+    return available;
 }
 
 export function getNextUpgradeCost(inv: Inventory): big.BigNumber {

@@ -25,7 +25,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     attr.Upgrades = getPurchaseableItems(counter, attr.Inventory);
     attr.NextUpgrade = getNextUpgradeCost(attr.Inventory);
 
-    if (attr.Upgrades.length > 0) {
+    if (Object.keys(attr.Upgrades).length > 0) {
         model.speech += "There are upgrades available.";
         model.reprompt = "Say 'get upgrades' to hear what is available. ";
     }

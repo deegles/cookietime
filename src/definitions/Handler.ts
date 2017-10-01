@@ -1,6 +1,6 @@
 import * as Big from "bignumber.js";
 import * as Frames from "../definitions/FrameDirectory";
-import {ItemTypes} from "./Inventory";
+import {AvailableItemsForPurchase} from "../resources/store";
 import {Attributes, RequestContext} from "./SkillContext";
 
 export class Frame {
@@ -33,7 +33,7 @@ export class ResponseContext {
 export class ResponseModel {
     constructor() {
         this.cookieCount = new Big(0);
-        this.upgrades = [];
+        this.upgrades = new AvailableItemsForPurchase();
     }
 
     speech: string;
@@ -42,7 +42,7 @@ export class ResponseModel {
     cardTitle: string;
     cardSubtitle: string;
     cookieCount: Big.BigNumber;
-    upgrades: Array<ItemTypes>;
+    upgrades: AvailableItemsForPurchase;
 }
 
 export interface ReturnsResponseContext {

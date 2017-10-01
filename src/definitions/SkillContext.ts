@@ -1,5 +1,6 @@
 import * as Big from "bignumber.js";
 import {query} from "../resources/LUIS";
+import {AvailableItemsForPurchase} from "../resources/store";
 import {getIntent} from "../resources/utilities";
 import {AlexaRequestBody, IntentRequest, ResolutionStatus, SessionEndedRequest} from "./AlexaService";
 import {BotFrameworkActivity, Intent as BotIntent} from "./BotFrameworkService";
@@ -171,7 +172,7 @@ export class Attributes {
         this.CookiesEaten = new Big("0");
         this.NextUpgrade = new Big("-1");
         this.CurrentFrameId = "Start";
-        this.Upgrades = [];
+        this.Upgrades = new AvailableItemsForPurchase();
         this.Inventory = {
             Kitchen: "Tiny",
             Ovens: ["EasyBake"],
@@ -191,6 +192,10 @@ export class Attributes {
             this.CookiesEaten = new Big(this.CookiesEaten);
         }
 
+        if (!this.NextUpgrade.isBigNumber) {
+            this.NextUpgrade = new Big(this.NextUpgrade);
+        }
+
     }
 
     FrameStack: Array<string>;
@@ -205,7 +210,7 @@ export class Attributes {
 
     Inventory: Inventory;
 
-    Upgrades: Array<KitchenTypes | AssistantTypes | OvenTypes>;
+    Upgrades: AvailableItemsForPurchase;
 
     NextUpgrade: Big.BigNumber;
 

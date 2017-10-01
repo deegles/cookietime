@@ -44,16 +44,16 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
         card.title = "Cookie Count: " + model.cookieCount.toFormat(0);
     }
 
-    if (model.upgrades.length > 0) {
+    if (Object.keys(model.upgrades).length > 0) {
 
-        model.upgrades.forEach(upgrade => {
-            let item: Purchaseable = Items.All[upgrade];
+        Object.keys(model.upgrades).forEach(key => {
+            let upgrade = model.upgrades[key];
             card.buttons.push(
                 {
                     text: "Upgrade",
-                    title: "Buy: " + (item.id + " " + item.type).toLowerCase(),
+                    title: "Buy " + (upgrade.item.id + " " + upgrade.item.type).toLowerCase() + ": " + upgrade.cost + " cookies.",
                     type: "postBack",
-                    value: "buy " + item.description,
+                    value: "buy " + upgrade.item.description,
                 }
             );
         });
@@ -86,7 +86,7 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
         // Reverse so that cookies button stays in place for clicking
         card.buttons.reverse();
 
-        if (model.upgrades.length < 1) {
+        if (Object.keys(model.upgrades).length < 1) {
             response.text = model.speech;
         }
     }
