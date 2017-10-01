@@ -14,12 +14,21 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     let cookiesPerAction = getCookiesPerAction(attr.Inventory);
     let cookiesSinceAction = getAssistantBakedCookies(attr.Inventory);
 
-    attr.Inventory.LastActionTime = new Date().getTime();
+    if (!cookiesSinceAction.eq(0)) {
+        attr.Inventory.LastActionTime = new Date().getTime();
+    }
 
     let counter = new Big(attr.CookieCounter).add(cookiesPerAction).add(cookiesSinceAction);
 
     model.speech = `Your cookie count is: ${Humanize(counter, 3)}. `;
     model.reprompt = model.speech;
+    model.cardText = `You baked ${cookiesPerAction} cookies`;
+
+    if (attr.Inventory.Assistants.length > 0 && cookiesSinceAction.gt(0)) {
+        model.cardText += `.\n Your assistants baked ${cookiesSinceAction} cookies.`;
+    } else {
+        model.cardText += ".";
+    }
 
     attr.CookieCounter = counter;
     attr.Upgrades = getPurchaseableItems(counter, attr.Inventory);
@@ -99,8 +108,6 @@ function getAssistantBakedCookies(inv: Inventory): Big.BigNumber {
     let ovens = inv.Ovens.slice().reverse();
     let assistants = inv.Assistants.slice().reverse();
 
-    console.log("Ovens: " + ovens);
-    console.log("Assistants: " + assistants );
     let now = new Date().getTime();
 
     while (assistants.length > 0 && ovens.length > 0 && assistants.length <= ovens.length) {
@@ -109,7 +116,7 @@ function getAssistantBakedCookies(inv: Inventory): Big.BigNumber {
 
         let hours = new Big(now - inv.LastActionTime).div(1000 * 60 * 60);
 
-        total = total.add((Big.min(assistant.duration, hours).times(oven.hourlyRate)).trunc());
+        total = total.add((Big.min(assistant.duration, hours).times(oven.hourlyRate)).ceil());
     }
 
     console.log("Assistants baked %s cookies.", total);
