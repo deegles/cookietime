@@ -38,6 +38,9 @@ export class ResponseModel {
 
     speech: string;
     reprompt?: string;
+    cardText: string;
+    cardTitle: string;
+    cardSubtitle: string;
     cookieCount: Big.BigNumber;
     upgrades: Array<ItemTypes>;
 }
