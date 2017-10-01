@@ -63,7 +63,7 @@ export class Items {
          */
         EasyBake: {
             baseCost: new Big(5),
-            multiplier: 1.07,
+            multiplier: 1.1,
             hourlyRate: 2,
             capacity: 1,
             type: "Oven",
@@ -73,7 +73,7 @@ export class Items {
         } as Oven,
         Toaster: {
             baseCost: new Big(10),
-            multiplier: 1.07,
+            multiplier: 1.1,
             hourlyRate: 4,
             capacity: 2,
             type: "Oven",
@@ -83,7 +83,7 @@ export class Items {
         } as Oven,
         HomeOven: {
             baseCost: new Big(20),
-            multiplier: 1.1,
+            multiplier: 1.15,
             hourlyRate: 8,
             capacity: 4,
             type: "Oven",
@@ -254,7 +254,7 @@ export class Items {
         City: {
             OvenLimit: 18,
             AssistantLimit: 18,
-            baseCost: new Big(3000),
+            baseCost: new Big(5000),
             multiplier: 1.1,
             type: "Kitchen",
             id: "City",
@@ -265,7 +265,7 @@ export class Items {
             OvenLimit: 40,
             AssistantLimit: 40,
             baseCost: new Big(10000),
-            multiplier: 1.1,
+            multiplier: 1.3,
             type: "Kitchen",
             id: "Regional",
             description: "a regional kitchen",
@@ -275,7 +275,7 @@ export class Items {
             OvenLimit: 100,
             AssistantLimit: 100,
             baseCost: new Big(50000),
-            multiplier: 1.1,
+            multiplier: 1.3,
             type: "Kitchen",
             id: "National",
             description: "a national kitchen",
