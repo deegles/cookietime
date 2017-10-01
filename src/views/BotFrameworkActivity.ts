@@ -5,34 +5,6 @@ import {View} from "../definitions/Views";
 
 new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkActivity) => {
 
-    let CookieAction = {
-        text: "Cookie",
-        title: "Cookies!",
-        type: "postBack",
-        value: "bake more cookies",
-    };
-
-    let UpgradesAction = {
-        text: "Upgrades",
-        title: "Check Upgrades",
-        type: "postBack",
-        value: "check for upgrades",
-    };
-
-    let EatAction = {
-        text: "eat",
-        title: "Eat a Cookie!",
-        type: "postBack",
-        value: "eat a cookie",
-    };
-
-    let HelpAction = {
-        text: "Help",
-        title: "Help",
-        type: "postBack",
-        value: "help",
-    };
-
     let card = {
         title: "Cookie Time",
         text: "Tap this card to bake more cookies!",
@@ -42,6 +14,18 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
 
     if (model.cookieCount) {
         card.title = "Cookie Count: " + model.cookieCount.toFormat(0);
+    }
+
+    if (model.cardText) {
+        card.text = model.cardText;
+    }
+
+    if (model.cardSubtitle) {
+        card["subtitle"] = model.cardSubtitle;
+    }
+
+    if (model.cardTitle) {
+        card.title = model.cardTitle;
     }
 
     if (Object.keys(model.upgrades).length > 0) {
@@ -93,3 +77,31 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
 
     return response;
 });
+
+let CookieAction = {
+    text: "Cookie",
+    title: "Cookies!",
+    type: "postBack",
+    value: "bake more cookies",
+};
+
+let UpgradesAction = {
+    text: "Upgrades",
+    title: "Check Upgrades",
+    type: "postBack",
+    value: "check for upgrades",
+};
+
+let EatAction = {
+    text: "eat",
+    title: "Eat a Cookie!",
+    type: "postBack",
+    value: "eat a cookie",
+};
+
+let HelpAction = {
+    text: "Help",
+    title: "Help",
+    type: "postBack",
+    value: "help",
+};
