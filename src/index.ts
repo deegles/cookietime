@@ -1,6 +1,6 @@
 "use strict";
-import * as verifier from "alexa-verifier";
 import {Callback, Context} from "aws-lambda";
+import * as xray from "aws-xray-sdk";
 import "source-map-support/register";
 import * as util from "util";
 import {
@@ -96,24 +96,29 @@ async function processBotFrameworkEvent(event: any, context: Context, callback: 
                 console.log("NLU:\n%j", nluResult);
             }
 
-            let requestCtx = await new CortanaRequestContext(request, nluResult);
             let attributes = new Attributes(await dal.get(request.from.id));
 
-            let frame = Frames[attributes.CurrentFrameId];
+            let requestCtx = await new CortanaRequestContext(request, nluResult);
 
-            if (requestCtx.intent in frame.actions) {
-                frame = frame.actions[requestCtx.intent](attributes, requestCtx);
-            } else {
-                frame = frame.unhandled(attributes, requestCtx);
-            }
+            xray["captureFunc"]("SkillCode", (subsegment) => {
 
-            attributes.CurrentFrameId = frame.id;
+                let frame = Frames[attributes.CurrentFrameId];
 
-            let responseCtx: ResponseContext = frame.entry(attributes, requestCtx);
+                if (requestCtx.intent in frame.actions) {
+                    frame = frame.actions[requestCtx.intent](attributes, requestCtx);
+                } else {
+                    frame = frame.unhandled(attributes, requestCtx);
+                }
 
-            let view = Views["BotFrameworkActivity"];
+                attributes.CurrentFrameId = frame.id;
 
-            responseActivity = view.render(responseCtx.model, request);
+                let responseCtx: ResponseContext = frame.entry(attributes, requestCtx);
+
+                let view = Views["BotFrameworkActivity"];
+
+                responseActivity = view.render(responseCtx.model, request);
+                subsegment.close();
+            });
 
             await dal.set(request.from.id, attributes);
 

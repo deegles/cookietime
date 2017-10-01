@@ -1,7 +1,11 @@
 "use strict";
 import * as aws from "aws-sdk";
+import * as AWSXRay from "aws-xray-sdk-core";
+
 import {DocumentClient} from "aws-sdk/clients/dynamodb";
 import * as LZUTF8 from "lzutf8";
+
+AWSXRay["captureAWS"](aws);
 
 let _doc: DocumentClient;
 
