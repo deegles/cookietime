@@ -27,7 +27,7 @@ export function getPurchaseableItems(cookies: big.BigNumber, inv: Inventory): Av
 
         let cost = calculateCost(item, inv);
 
-        if (cost.lessThanOrEqualTo(cookies) && canUpgrade(inv, item)) {
+        if (cost.lessThanOrEqualTo(cookies) && canPurchase(inv, item)) {
             if (item.type === "Oven") {
                 available.oven = {
                     item: item,
@@ -64,7 +64,7 @@ export function getNextUpgradeCost(inv: Inventory): big.BigNumber {
 
             let cost = calculateCost(item, inv);
 
-            if (cost.lessThanOrEqualTo(target) && canUpgrade(inv, item)) {
+            if (cost.lessThanOrEqualTo(target) && canPurchase(inv, item)) {
                 available.push(cost);
             }
         }
@@ -93,7 +93,7 @@ export function calculateCost(item: Purchaseable, inv: Inventory): big.BigNumber
     return cost.floor();
 }
 
-export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
+export function canPurchase(inv: Inventory, item: Purchaseable): boolean {
     let inventoryItems: Array<ItemTypes> = [].concat(inv.Ovens, inv.Kitchen, inv.Assistants);
 
     let slotsAvailable: boolean = false;
@@ -101,14 +101,13 @@ export function canUpgrade(inv: Inventory, item: Purchaseable): boolean {
     if (item.type === "Oven") {
         slotsAvailable = inv.Ovens.length < (Items.All[inv.Kitchen] as Kitchen).OvenLimit;
     } else if (item.type === "Assistant") {
-        slotsAvailable = inv.Assistants.length < (Items.All[inv.Kitchen] as Kitchen).AssistantLimit;
+        slotsAvailable = inv.Assistants.length < (Items.All[inv.Kitchen] as Kitchen).AssistantLimit && inv.Assistants.length < inv.Ovens.length;
     }
 
     let upgradeable: boolean = inventoryItems.some(itemId => {
         let invItem = Items.All[itemId] as Purchaseable;
         return invItem.type === item.type && invItem.rank < item.rank;
     });
-
 
     return slotsAvailable || upgradeable;
 }

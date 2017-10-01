@@ -65,7 +65,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
         });
 
         let ovenSpaceFull = !ovensBelowItemRank && candidate.type === "Oven" && attr.Inventory.Ovens.length >= kitchen.OvenLimit;
-        let assistantSpaceFull = !assistantsBelowItemRank && candidate.type === "Assistant" && attr.Inventory.Assistants.length >= kitchen.AssistantLimit;
+        let assistantSpaceFull = !assistantsBelowItemRank && candidate.type === "Assistant" && attr.Inventory.Assistants.length >= kitchen.AssistantLimit && attr.Inventory.Assistants.length >= attr.Inventory.Ovens.length;
 
         if (ovensBelowItemRank && assistantsBelowItemRank) {
             model.speech = "You already have better items.";
