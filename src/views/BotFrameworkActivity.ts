@@ -41,11 +41,9 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
                 }
             );
         });
-    } else {
-        card.buttons.push(UpgradesAction);
     }
 
-    card.buttons.push(EatAction, HelpAction);
+    card.buttons.push(UpgradesAction, EatAction, HelpAction);
 
     let Attachment = {
         contentType: "application/vnd.microsoft.card.hero",
@@ -66,13 +64,8 @@ new View("BotFrameworkActivity", (model: ResponseModel, activity: BotFrameworkAc
     } as BotFrameworkActivity;
 
     if (activity.channelId === "webchat") {
-
         // Reverse so that cookies button stays in place for clicking
         card.buttons.reverse();
-
-        if (Object.keys(model.upgrades).length < 1) {
-            response.text = model.speech;
-        }
     }
 
     return response;
