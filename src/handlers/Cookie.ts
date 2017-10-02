@@ -5,7 +5,7 @@ import {Attributes, RequestContext} from "../definitions/SkillContext";
 import {Humanize} from "../resources/humanize";
 
 import * as Frames from "../definitions/FrameDirectory";
-import {getNextUpgradeCost, getPurchaseableItems} from "../resources/store";
+import {getNextUpgrades, getPurchaseableItems} from "../resources/store";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
@@ -14,7 +14,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     let cookiesPerAction = getCookiesPerAction(attr.Inventory);
     let cookiesSinceAction = getAssistantBakedCookies(attr.Inventory);
 
-    if (!cookiesSinceAction.eq(0)) {
+    if (!cookiesSinceAction.eq(0) || attr.Inventory.Assistants.length === 0) {
         attr.Inventory.LastActionTime = new Date().getTime();
     }
 
@@ -32,7 +32,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
     attr.CookieCounter = counter;
     attr.Upgrades = getPurchaseableItems(counter, attr.Inventory);
-    attr.NextUpgrade = getNextUpgradeCost(attr.Inventory);
+    attr.NextUpgrades = getNextUpgrades(attr.Inventory);
 
     if (Object.keys(attr.Upgrades).length > 0) {
         model.speech += "There are upgrades available.";

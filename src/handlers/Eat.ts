@@ -3,6 +3,7 @@ import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 import {Humanize} from "../resources/humanize";
+import {getNextUpgrades, getPurchaseableItems} from "../resources/store";
 import {redirect} from "../resources/utilities";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
@@ -38,6 +39,9 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
         model.speech = `You ate ${Humanize(eatCount)} cookies. You have eaten ${Humanize(attr.CookiesEaten, 3)} cookies.`;
         model.reprompt = `You have ${Humanize(attr.CookieCounter, 3)} cookies left.`;
     }
+
+    attr.Upgrades = getPurchaseableItems(attr.CookieCounter, attr.Inventory);
+    attr.NextUpgrades = getNextUpgrades(attr.Inventory);
 
     model.cookieCount = attr.CookieCounter;
     model.upgrades = attr.Upgrades;

@@ -170,7 +170,7 @@ export class Attributes {
         this.FrameStack = [];
         this.CookieCounter = new Big("0");
         this.CookiesEaten = new Big("0");
-        this.NextUpgrade = new Big("-1");
+        this.NextUpgrades = new AvailableItemsForPurchase();
         this.CurrentFrameId = "Start";
         this.Upgrades = new AvailableItemsForPurchase();
         this.Inventory = {
@@ -192,8 +192,16 @@ export class Attributes {
             this.CookiesEaten = new Big(this.CookiesEaten);
         }
 
-        if (!this.NextUpgrade.isBigNumber) {
-            this.NextUpgrade = new Big(this.NextUpgrade);
+        if (this.NextUpgrades.kitchen && this.NextUpgrades.kitchen.cost) {
+            this.NextUpgrades.kitchen.cost = new Big(this.NextUpgrades.kitchen.cost);
+        }
+
+        if (this.NextUpgrades.oven && this.NextUpgrades.oven.cost) {
+            this.NextUpgrades.oven.cost = new Big(this.NextUpgrades.oven.cost);
+        }
+
+        if (this.NextUpgrades.assistant && this.NextUpgrades.assistant.cost) {
+            this.NextUpgrades.assistant.cost = new Big(this.NextUpgrades.assistant.cost);
         }
 
     }
@@ -212,7 +220,7 @@ export class Attributes {
 
     Upgrades: AvailableItemsForPurchase;
 
-    NextUpgrade: Big.BigNumber;
+    NextUpgrades: AvailableItemsForPurchase;
 
     get(prop: string): any {
         console.log(`Fetching prop ${prop}, ${prop in this ? "found" : "not found"}.`);
