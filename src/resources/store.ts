@@ -1,18 +1,18 @@
 import * as big from "bignumber.js";
 import {
-    Assistant, AssistantTypes, Inventory, Items, ItemTypes, Kitchen, KitchenTypes, Oven, OvenTypes,
+    Assistant, AssistantTypes, Inventory, ItemCategories, Items, ItemTypes, Kitchen, KitchenTypes, Oven, OvenTypes,
     Purchaseable
 } from "../definitions/Inventory";
 
-export interface ItemForPurchase {
+export interface PricedItem {
     item: Purchaseable;
     cost: big.BigNumber;
 }
 
 export class AvailableItemsForPurchase {
-    oven: ItemForPurchase;
-    kitchen: ItemForPurchase;
-    assistant: ItemForPurchase;
+    oven: PricedItem;
+    kitchen: PricedItem;
+    assistant: PricedItem;
 }
 
 export function getPurchaseableItems(cookies: big.BigNumber, inv: Inventory): AvailableItemsForPurchase {
@@ -50,34 +50,68 @@ export function getPurchaseableItems(cookies: big.BigNumber, inv: Inventory): Av
     return available;
 }
 
-export function getNextUpgradeCost(inv: Inventory): big.BigNumber {
-    let cost = new big(-1);
-    let available: Array<big.BigNumber> = [];
-    let allItems: Array<ItemTypes> = Object.keys(Items.All) as Array<ItemTypes>;
+export function getNextUpgrades(inv: Inventory): AvailableItemsForPurchase {
+    let upgrades = new AvailableItemsForPurchase();
 
-    for (let i = 0; i < 25; i++) {
-        let target = new big(10).pow(i);
+    let oven = Items.All[inv.Ovens.slice(-1).pop()] || Items.All.EasyBake;
 
-        for (let itemIndex = 0; itemIndex < allItems.length; itemIndex++) {
-
-            let item = Items.All[allItems[itemIndex]] as Purchaseable;
-
-            let cost = calculateCost(item, inv);
-
-            if (cost.lessThanOrEqualTo(target) && canPurchase(inv, item)) {
-                available.push(cost);
-            }
+    let nextOvenId = Object.keys(Items.All).find(itemId => {
+        let item: Purchaseable = Items.All[itemId];
+        let slotsAvailable = inv.Ovens.length < (Items.All[inv.Kitchen] as Kitchen).OvenLimit;
+        if (slotsAvailable) {
+            return item.type === "Oven" && item.rank <= oven.rank; // If slots are available return the lowest rank.
+        } else {
+            return item.type === "Oven" && item.rank > oven.rank;
         }
+    });
 
-        if (available.length > 0) {
-            break;
-        }
+    if (nextOvenId) {
+        let item: Purchaseable = Items.All[nextOvenId];
+        upgrades.oven = {
+            item: item,
+            cost: calculateCost(item, inv)
+        };
     }
 
-    available.sort(byBigNumber);
-    console.log("available: " + JSON.stringify(available));
+    let assistant = Items.All[inv.Assistants.slice(-1).pop()] || Items.All.Junior;
 
-    return available.pop() || cost;
+    let nextAssistantId = Object.keys(Items.All).find(itemId => {
+        let item: Purchaseable = Items.All[itemId];
+        let slotsAvailable = inv.Assistants.length < (Items.All[inv.Kitchen] as Kitchen).AssistantLimit;
+
+        if (slotsAvailable) {
+            return item.type === "Assistant" && item.rank <= assistant.rank;
+        } else {
+            return item.type === "Assistant" && item.rank > assistant.rank;
+        }
+    });
+
+    if (nextAssistantId) {
+        let item: Purchaseable = Items.All[nextAssistantId];
+        upgrades.assistant = {
+            item: item,
+            cost: calculateCost(item, inv)
+        };
+    }
+
+    let kitchen = Items.All[inv.Kitchen] || Items.All.Tiny;
+
+    let nextKitchenId = Object.keys(Items.All).find(itemId => {
+        let item: Purchaseable = Items.All[itemId];
+        return item.type === "Kitchen" && kitchen && kitchen.rank && item.rank > kitchen.rank;
+    });
+
+    if (nextKitchenId) {
+        let item: Purchaseable = Items.All[nextKitchenId];
+        upgrades.kitchen = {
+            item: item,
+            cost: calculateCost(item, inv)
+        };
+    }
+
+    console.log("next upgrades: " + JSON.stringify(upgrades));
+
+    return upgrades;
 }
 
 export function calculateCost(item: Purchaseable, inv: Inventory): big.BigNumber {
