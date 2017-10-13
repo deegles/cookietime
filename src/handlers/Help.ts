@@ -7,7 +7,7 @@ let entry = (attr: Attributes, ctx: AlexaRequestContext) => {
 
     let model = new ResponseModel();
 
-    model.speech = "It's Cookie Time. You have to bake as many cookies as you can. Say 'cookie' to bake cookies. Purchase upgrades to bake more cookies each time. ";
+    model.speech = "It's Cookie Time. You have to bake as many cookies as you can. Say 'cookie' to bake cookies. Purchase upgrades to bake cookies more quickly. ";
     model.speech += "Assistants can bake cookies while you're not around. Perfect cookies are rare, and can be traded for better upgrades! ";
     model.speech += "By the way, you can never eat too many cookies...";
     model.reprompt = "Say 'check upgrades' for advice, then say the name of the item you want. ";
