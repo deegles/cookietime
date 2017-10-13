@@ -22,22 +22,24 @@ export type AlexaIntents =
     | "CookieIntent"
     | "EatCookieIntent"
     | "LaunchRequest"
-    | "SessionEndedRequest"
-    | "PurchaseUpgradeIntent";
+    | "PurchaseUpgradeIntent"
+    | "SessionEndedRequest";
 
 export type CortanaIntents =
-    "Microsoft.Launch"
-    | "Utilities.Confirm"
-    | "Utilities.Cancel"
+     "Microsoft.Launch"
+    | "Microsoft.NoIntent"
+    | "Microsoft.YesIntent"
+    | "None"
     | "Places.StartOver"
+    | "PurchaseUpgradeIntent"
+    | "Utilities.Cancel"
+    | "Utilities.Confirm"
     | "Utilities.GoBack"
     | "Utilities.Help"
     | "Utilities.Repeat"
     | "Utilities.ShowPrevious"
-    | "Utilities.Stop"
-    | "Microsoft.YesIntent"
-    | "Microsoft.NoIntent"
-    | "None";
+    | "Utilities.StartOver"
+    | "Utilities.Stop";
 
 export type SkillIntents =
     "CancelIntent"
@@ -93,18 +95,19 @@ export const Intents: {[Key in AllIntentNames]: SkillIntents } = {
     "CookieIntent": "CookieIntent",
     "EatCookieIntent": "EatCookieIntent",
     "LaunchRequest": "LaunchRequest",
-    "SessionEndedRequest": "SessionEndedRequest",
-    "PurchaseUpgradeIntent": "PurchaseUpgradeIntent",
     "Microsoft.Launch": "LaunchRequest",
+    "Microsoft.NoIntent": "NoIntent",
+    "Microsoft.YesIntent": "YesIntent",
     "None": "None",
-    "Utilities.Confirm": "YesIntent",
-    "Utilities.Cancel": "CancelIntent",
     "Places.StartOver": "StartOverIntent",
+    "PurchaseUpgradeIntent": "PurchaseUpgradeIntent",
+    "SessionEndedRequest": "SessionEndedRequest",
+    "Utilities.Cancel": "CancelIntent",
+    "Utilities.Confirm": "YesIntent",
     "Utilities.GoBack": "PreviousIntent",
     "Utilities.Help": "HelpIntent",
     "Utilities.Repeat": "RepeatIntent",
     "Utilities.ShowPrevious": "PreviousIntent",
+    "Utilities.StartOver": "StartOverIntent",
     "Utilities.Stop": "StopIntent",
-    "Microsoft.YesIntent": "YesIntent",
-    "Microsoft.NoIntent": "NoIntent"
 };
