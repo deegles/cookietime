@@ -40,7 +40,7 @@ function updateFunctionConfig() {
         FunctionName: lambdaARN_Dev,
         Handler: "index.default",
         MemorySize: 512,
-        Timeout: 5
+        Timeout: 15
     };
     lambda.updateFunctionConfiguration(params, function (err, data) {
         clearInterval(dance);
