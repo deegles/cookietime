@@ -2,7 +2,7 @@ import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 import * as Frames from "../definitions/FrameDirectory";
-import {Items, ItemTypes, Kitchen, Purchaseable} from "../definitions/Inventory";
+import {Inventory, Items, ItemTypes, Kitchen, Purchaseable} from "../definitions/Inventory";
 import {calculateCost, getPurchaseableItems} from "../resources/store";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
@@ -82,7 +82,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
             attr.CookieCounter = attr.CookieCounter.minus(cost);
             attr.Upgrades = getPurchaseableItems(attr.CookieCounter, attr.Inventory);
-            model.speech = "You now have " + attr.Inventory.Ovens.join(", ");
+            model.speech = ListInventory(attr.Inventory);
 
         } else if (candidate.type === "Kitchen") {
 
@@ -90,7 +90,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
             attr.CookieCounter = attr.CookieCounter.minus(cost);
             attr.Upgrades = getPurchaseableItems(attr.CookieCounter, attr.Inventory);
-            model.speech = "You now have " + attr.Inventory.Ovens.join(", ");
+            model.speech = ListInventory(attr.Inventory);
         } else if (candidate.type === "Assistant") {
 
             attr.Inventory.Assistants.push(itemId);
@@ -100,7 +100,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
 
             attr.CookieCounter = attr.CookieCounter.minus(cost);
             attr.Upgrades = getPurchaseableItems(attr.CookieCounter, attr.Inventory);
-            model.speech = "You now have " + attr.Inventory.Assistants.join(", ");
+            model.speech = ListInventory(attr.Inventory);
         }
 
     } else {
@@ -108,6 +108,7 @@ let entry = (attr: Attributes, ctx: RequestContext) => {
     }
 
     model.reprompt = "What else would you like to purchase?";
+    model.cardText = model.speech;
 
     model.cookieCount = attr.CookieCounter;
     model.upgrades = attr.Upgrades;
@@ -140,5 +141,27 @@ let actionMap = {
 let unhandled = () => {
     return Frames["Start"];
 };
+
+function ListInventory(inv: Inventory): string {
+    let str = "You now have:\n";
+
+    let allItems: ItemTypes[] = [].concat(inv.Assistants, inv.Kitchen, inv.Ovens);
+
+    let count = {};
+
+    allItems.forEach(itemId => {
+        let item = Items.All[itemId];
+        let key = (item.id + " " + item.type).toLowerCase();
+        key in count ? count[key]++ : count[key] = 1;
+    });
+
+    Object.keys(count).forEach(key => {
+        str += count[key] + " " + key + ", ";
+    });
+
+    str = str.slice(0, str.length - 2) + ".";
+
+    return str;
+}
 
 new Frame("Purchase", entry, unhandled, actionMap);
