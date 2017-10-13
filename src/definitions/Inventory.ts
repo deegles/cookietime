@@ -36,7 +36,7 @@ export type OvenTypes =
     "EasyBake"
     | "Fancy"
     | "Toaster"
-    | "HomeOven"
+    | "Home"
     | "Professional"
     | "Industrial"
     | "Continuous"
@@ -81,13 +81,13 @@ export class Items {
             description: "a toaster oven",
             rank: 2
         } as Oven,
-        HomeOven: {
+        Home: {
             baseCost: new Big(20),
             multiplier: 1.15,
             hourlyRate: 8,
             capacity: 4,
             type: "Oven",
-            id: "HomeOven",
+            id: "Home",
             description: "a home oven",
             rank: 3
         } as Oven,
