@@ -51,6 +51,9 @@ let actionMap: ActionMap = {
     "LaunchRequest": (attr: Attributes) => {
         return Frames["Start"];
     },
+    "HelpIntent": (attr: Attributes) => {
+        return Frames["Help"];
+    },
     "RepeatIntent": (attr: Attributes) => {
         attr.FrameStack.push("Cookie");
         return Frames["Repeat"];

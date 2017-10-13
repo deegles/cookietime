@@ -123,6 +123,9 @@ let actionMap = {
     "PurchaseUpgradeIntent": (attr: Attributes) => {
         return Frames["Purchase"];
     },
+    "HelpIntent": (attr: Attributes) => {
+        return Frames["Help"];
+    },
     "EatCookieIntent": (attr: Attributes) => {
         return Frames["Eat"];
     },

@@ -120,6 +120,9 @@ async function processBotFrameworkEvent(event: any, context: Context, callback: 
                 subsegment.close();
             });
 
+            // Clean up unneeded attributes before saving
+            delete attributes.NextUpgrades;
+
             await dal.set(request.from.id, attributes);
 
             console.log("Response:\n%j" + JSON.stringify(responseActivity));

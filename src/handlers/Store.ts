@@ -78,6 +78,9 @@ let actionMap = {
     "CheckUpgradesIntent": (attr: Attributes) => {
         return Frames["Store"];
     },
+    "HelpIntent": (attr: Attributes) => {
+        return Frames["Help"];
+    },
 };
 
 let unhandled = () => {

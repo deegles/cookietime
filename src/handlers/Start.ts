@@ -7,7 +7,7 @@ let entry = (attr: Attributes, ctx: AlexaRequestContext) => {
 
     let model = new ResponseModel();
 
-    model.speech = "It's cookie time. Do you want to cook?";
+    model.speech = "It's cookie time. Do you want to bake?";
     model.reprompt = "hello again";
 
     model.cookieCount = attr.CookieCounter;
@@ -42,6 +42,9 @@ let actionMap = {
     },
     "CheckUpgradesIntent": (attr: Attributes) => {
         return Frames["Store"];
+    },
+    "HelpIntent": (attr: Attributes) => {
+        return Frames["Help"];
     },
     "SessionEndedRequest": (attr: Attributes) => {
         console.log("Session ended in start!");
