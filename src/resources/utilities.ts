@@ -1,6 +1,7 @@
 import {AlexaRequestBody, AlexaRequestType, IntentRequest} from "../definitions/AlexaService";
 import * as Frames from "../definitions/FrameDirectory";
 import {Intents, SkillIntents} from "../definitions/Intents";
+import {Inventory, Items, ItemTypes} from "../definitions/Inventory";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
 
 /**
@@ -40,6 +41,26 @@ export function redirect(attr: Attributes, ctx: RequestContext) {
     }
 
     return frame;
+}
+
+export function ListInventory(inv: Inventory): string {
+    let str = "You now have:\n";
+
+    let allItems: ItemTypes[] = [].concat(inv.Assistants, inv.Kitchen, inv.Ovens);
+
+    let count = {};
+
+    allItems.forEach(itemId => {
+        let item = Items.All[itemId];
+        let key = (item.id + " " + item.type).toLowerCase();
+        key in count ? count[key]++ : count[key] = 1;
+    });
+
+    Object.keys(count).forEach(key => {
+        str += count[key] + " " + key + ", ";
+    });
+
+    return str.slice(0, str.length - 2) + ".";
 }
 
 String.prototype.padEnd = function padEnd(targetLength, padString) {

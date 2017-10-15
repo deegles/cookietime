@@ -1,9 +1,9 @@
 import {Frame, ResponseContext, ResponseModel} from "../definitions/Handler";
 import {Attributes, RequestContext} from "../definitions/SkillContext";
-
 import * as Frames from "../definitions/FrameDirectory";
 import {Inventory, Items, ItemTypes, Kitchen, Purchaseable} from "../definitions/Inventory";
 import {calculateCost, getPurchaseableItems} from "../resources/store";
+import {ListInventory} from "../resources/utilities";
 
 let entry = (attr: Attributes, ctx: RequestContext) => {
 
@@ -141,27 +141,5 @@ let actionMap = {
 let unhandled = () => {
     return Frames["Start"];
 };
-
-function ListInventory(inv: Inventory): string {
-    let str = "You now have:\n";
-
-    let allItems: ItemTypes[] = [].concat(inv.Assistants, inv.Kitchen, inv.Ovens);
-
-    let count = {};
-
-    allItems.forEach(itemId => {
-        let item = Items.All[itemId];
-        let key = (item.id + " " + item.type).toLowerCase();
-        key in count ? count[key]++ : count[key] = 1;
-    });
-
-    Object.keys(count).forEach(key => {
-        str += count[key] + " " + key + ", ";
-    });
-
-    str = str.slice(0, str.length - 2) + ".";
-
-    return str;
-}
 
 new Frame("Purchase", entry, unhandled, actionMap);
